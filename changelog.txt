@@ -1,5 +1,6 @@
-Version 0.1.11 (2025-06-01)
+Version 0.1.11 (2025-07-09)
 - Add ELV-SH-WSM
+- Add ELV-SH-SW1-BAT
 
 Version 0.1.10 (2025-02-03)
 - Add ELV-SH-CTH
