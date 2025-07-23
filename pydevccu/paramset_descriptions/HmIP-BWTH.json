@@ -1,5 +1,5 @@
 {
-  "VCU7981243": {
+  "VCU1769958": {
     "SERVICE": {
       "TEST_STATUS": {
         "MIN": 0,
@@ -48,7 +48,7 @@
       }
     }
   },
-  "VCU7981243:0": {
+  "VCU1769958:0": {
     "MASTER": {
       "DAYLIGHT_SAVINGS_TIME": {
         "MIN": false,
@@ -429,7 +429,7 @@
       }
     }
   },
-  "VCU7981243:1": {
+  "VCU1769958:1": {
     "MASTER": {
       "P2_ENDTIME_THURSDAY_7": {
         "MIN": 5,
@@ -11021,7 +11021,7 @@
       }
     }
   },
-  "VCU7981243:2": {
+  "VCU1769958:2": {
     "SERVICE": {
       "TEST_STATUS": {
         "MIN": 0,
@@ -11070,7 +11070,7 @@
       }
     }
   },
-  "VCU7981243:3": {
+  "VCU1769958:3": {
     "SERVICE": {
       "TEST_STATUS": {
         "MIN": 0,
@@ -11119,7 +11119,7 @@
       }
     }
   },
-  "VCU7981243:4": {
+  "VCU1769958:4": {
     "LINK": {
       "LONG_COND_VALUE_LO": {
         "MIN": 0,
@@ -11188,7 +11188,7 @@
       }
     }
   },
-  "VCU7981243:5": {
+  "VCU1769958:5": {
     "MASTER": {
       "CLIMATE_FUNCTION": {
         "MIN": "THERMOSTAT",
@@ -11313,7 +11313,7 @@
       }
     }
   },
-  "VCU7981243:6": {
+  "VCU1769958:6": {
     "LINK": {
       "SHORT_ON_TIME_BASE": {
         "MIN": "BASE_100_MS",
@@ -11500,7 +11500,7 @@
       }
     }
   },
-  "VCU7981243:7": {
+  "VCU1769958:7": {
     "SERVICE": {
       "TEST_STATUS": {
         "MIN": 0,
@@ -11549,7 +11549,7 @@
       }
     }
   },
-  "VCU7981243:8": {
+  "VCU1769958:8": {
     "MASTER": {
       "ON_TIME_BASE": {
         "MIN": "BASE_100_MS",
@@ -11829,7 +11829,7 @@
       }
     }
   },
-  "VCU7981243:9": {
+  "VCU1769958:9": {
     "MASTER": {
       "EVENT_RANDOMTIME_UNIT": {
         "MIN": "100MS",
@@ -11940,7 +11940,7 @@
       }
     }
   },
-  "VCU7981243:10": {
+  "VCU1769958:10": {
     "MASTER": {
       "POWERUP_ONDELAY_VALUE": {
         "MIN": 0,
@@ -12750,7 +12750,7 @@
       }
     }
   },
-  "VCU7981243:11": {
+  "VCU1769958:11": {
     "MASTER": {
       "POWERUP_ONDELAY_VALUE": {
         "MIN": 0,
@@ -13560,7 +13560,7 @@
       }
     }
   },
-  "VCU7981243:12": {
+  "VCU1769958:12": {
     "MASTER": {
       "POWERUP_ONDELAY_VALUE": {
         "MIN": 0,
@@ -14370,7 +14370,7 @@
       }
     }
   },
-  "VCU7981243:13": {
+  "VCU1769958:13": {
     "MASTER": {
       "OFFDELAY_TIME_FACTOR": {
         "MIN": 0,
@@ -14477,7 +14477,7 @@
       }
     }
   },
-  "VCU7981243:14": {
+  "VCU1769958:14": {
     "MASTER": {
       "ON_TIME_BASE": {
         "MIN": "BASE_100_MS",
@@ -14640,7 +14640,7 @@
       }
     }
   },
-  "VCU7981243:15": {
+  "VCU1769958:15": {
     "SERVICE": {
       "TEST_STATUS": {
         "MIN": 0,
@@ -14689,7 +14689,7 @@
       }
     }
   },
-  "VCU7981243:16": {
+  "VCU1769958:16": {
     "SERVICE": {
       "TEST_STATUS": {
         "MIN": 0,
