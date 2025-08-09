@@ -5,6 +5,10 @@ import sys
 import logging
 import threading
 import json
+try:
+    import orjson as _fastjson  # type: ignore
+except Exception:  # pragma: no cover - optional dependency
+    _fastjson = None
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
 from pydevccu.converter import CONVERTABLE_PARAMETERS, convert_combined_parameter_to_paramset
@@ -20,6 +24,14 @@ if sys.stdout.isatty():
 def initParamsets():
     with open(const.PARAMSETS_DB, 'w') as fptr:
         fptr.write("{}")
+
+def _load_json_file(path):
+    """Load JSON from file efficiently, using orjson if available."""
+    if _fastjson is not None:
+        with open(path, 'rb') as fptr:
+            return _fastjson.loads(fptr.read())
+    with open(path, 'r') as fptr:
+        return json.load(fptr)
 
 # pylint: disable=too-many-instance-attributes
 class RPCFunctions():
@@ -67,22 +79,20 @@ class RPCFunctions():
             if devices is not None:
                 if devname not in devices:
                     continue
-            with open(os.path.join(dd_path, filename)) as fptr:
-                dd = json.load(fptr)
-                self.devices.extend(dd)
-                added_devices.extend(dd)
-                for device in dd:
-                    d_addr = device.get(const.ATTR_ADDRESS)
-                    # Populate fast lookup index (store by uppercase to match later queries)
-                    if isinstance(d_addr, str):
-                        self.device_by_address[d_addr.upper()] = device
-                    if not ':' in d_addr:
-                        self.supported_devices[devname] = d_addr
-                        break
-            with open(os.path.join(pd_path, filename)) as fptr:
-                pd = json.load(fptr)
-                for k, v in pd.items():
-                    self.paramset_descriptions[k] = v
+            dd = _load_json_file(os.path.join(dd_path, filename))
+            self.devices.extend(dd)
+            added_devices.extend(dd)
+            for device in dd:
+                d_addr = device.get(const.ATTR_ADDRESS)
+                # Populate fast lookup index (store by uppercase to match later queries)
+                if isinstance(d_addr, str):
+                    self.device_by_address[d_addr.upper()] = device
+                if not ':' in d_addr:
+                    self.supported_devices[devname] = d_addr
+                    break
+            pd = _load_json_file(os.path.join(pd_path, filename))
+            for k, v in pd.items():
+                self.paramset_descriptions[k] = v
             if self.logic and devname in device_logic.DEVICE_MAP.keys():
                 logic_module = device_logic.DEVICE_MAP.get(devname)
                 logic_device = logic_module(self, **self.logic)
@@ -136,8 +146,7 @@ class RPCFunctions():
 
     def _loadParamsets(self):
         if self.persistance:
-            with open(const.PARAMSETS_DB) as fptr:
-                self.paramsets = json.load(fptr)
+            self.paramsets = _load_json_file(const.PARAMSETS_DB)
 
     def _saveParamsets(self):
         LOG.debug("Saving paramsets")
@@ -158,7 +167,7 @@ class RPCFunctions():
         deleteDevices = []
         knownDeviceAddresses = set()
         for device in self.knownDevices:
-            if device[const.ATTR_ADDRESS] not in self.paramset_descriptions.keys():
+            if device[const.ATTR_ADDRESS] not in self.paramset_descriptions:
                 deleteDevices.append(device[const.ATTR_ADDRESS])
             else:
                 knownDeviceAddresses.add(device[const.ATTR_ADDRESS])
