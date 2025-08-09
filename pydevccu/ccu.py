@@ -42,6 +42,8 @@ class RPCFunctions():
             self.active_devices = []
             self.logic = logic
             self.logic_devices = []
+            # Index for fast address-based lookups to avoid O(n) scans
+            self.device_by_address = {}
             self._loadDevices(devices)
             if not os.path.exists(const.PARAMSETS_DB) and persistance:
                 initParamsets()
@@ -71,6 +73,9 @@ class RPCFunctions():
                 added_devices.extend(dd)
                 for device in dd:
                     d_addr = device.get(const.ATTR_ADDRESS)
+                    # Populate fast lookup index (store by uppercase to match later queries)
+                    if isinstance(d_addr, str):
+                        self.device_by_address[d_addr.upper()] = device
                     if not ':' in d_addr:
                         self.supported_devices[devname] = d_addr
                         break
@@ -112,6 +117,9 @@ class RPCFunctions():
                     if del_address is None:
                         continue
                     addresses.append(del_address)
+                    # Remove from lookup indices and caches
+                    if isinstance(del_address, str):
+                        self.device_by_address.pop(del_address.upper(), None)
                     if del_address in self.paramset_descriptions:
                         del self.paramset_descriptions[del_address]
                     if del_address in self.paramsets:
@@ -148,12 +156,12 @@ class RPCFunctions():
     def _pushDevices(self, interface_id):
         newDevices = []
         deleteDevices = []
-        knownDeviceAddresses = []
+        knownDeviceAddresses = set()
         for device in self.knownDevices:
             if device[const.ATTR_ADDRESS] not in self.paramset_descriptions.keys():
                 deleteDevices.append(device[const.ATTR_ADDRESS])
             else:
-                knownDeviceAddresses.append(device[const.ATTR_ADDRESS])
+                knownDeviceAddresses.add(device[const.ATTR_ADDRESS])
         for device in self.devices:
             if device[const.ATTR_ADDRESS] not in knownDeviceAddresses:
                 newDevices.append(device)
@@ -287,9 +295,9 @@ class RPCFunctions():
     def getDeviceDescription(self, address):
         address = address.upper()
         LOG.debug("RPCFunctions.getDeviceDescription: address=%s", address)
-        for device in self.devices:
-            if device.get(const.ATTR_ADDRESS) == address:
-                return device
+        device = self.device_by_address.get(address)
+        if device is not None:
+            return device
         raise Exception
 
     def getParamsetDescription(self, address, paramset_type):
@@ -347,23 +355,23 @@ class RPCFunctions():
     def getMetadata(self, object_id, data_id):
         LOG.debug("RPCFunctions.getMetadata: object_id=%s, data_id=%s", object_id, data_id)
         address = object_id.upper()
-        for device in self.devices:
-            if device.get(const.ATTR_ADDRESS) == address:
-                if data_id in device:
-                    return device.get(data_id)
-                if data_id == const.ATTR_NAME:
-                    if device.get(const.ATTR_CHILDREN):
-                        return "{} {}".format(
-                            device.get(const.ATTR_TYPE),
-                            device.get(const.ATTR_ADDRESS)
-                        )
-                    else:
-                        return "{} {}".format(
-                            device.get(const.ATTR_PARENT_TYPE),
-                            device.get(const.ATTR_ADDRESS)
-                        )
+        device = self.device_by_address.get(address)
+        if device is not None:
+            if data_id in device:
+                return device.get(data_id)
+            if data_id == const.ATTR_NAME:
+                if device.get(const.ATTR_CHILDREN):
+                    return "{} {}".format(
+                        device.get(const.ATTR_TYPE),
+                        device.get(const.ATTR_ADDRESS)
+                    )
                 else:
-                    return None
+                    return "{} {}".format(
+                        device.get(const.ATTR_PARENT_TYPE),
+                        device.get(const.ATTR_ADDRESS)
+                    )
+            else:
+                return None
         raise Exception
 
     def clientServerInitialized(self, interface_id):
