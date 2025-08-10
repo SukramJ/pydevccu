@@ -22,7 +22,9 @@ classifiers = [
     "Topic :: Home Automation",
 ]
 requires-python = ">=3.13.0"
-
+dependencies    = [
+    "orjson>=3.11.0",
+]
 [project.urls]
 "Source Code" = "https://github.com/sukramj/pydevccu"
 "Bug Reports" = "https://github.com/sukramj/pydevccu/issues"
