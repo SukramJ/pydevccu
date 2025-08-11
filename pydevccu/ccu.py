@@ -5,6 +5,7 @@ import sys
 import logging
 import threading
 import json
+from functools import cache
 try:
     import orjson as _fastjson  # type: ignore
 except Exception:  # pragma: no cover - optional dependency
@@ -301,6 +302,7 @@ class RPCFunctions():
             self.paramsets[address][paramset_key][value_key] = value
             self._fireEvent(self.interface_id, address, value_key, value)
 
+    @cache
     def getDeviceDescription(self, address):
         address = address.upper()
         LOG.debug("RPCFunctions.getDeviceDescription: address=%s", address)
@@ -309,6 +311,7 @@ class RPCFunctions():
             return device
         raise Exception
 
+    @cache
     def getParamsetDescription(self, address, paramset_type):
         address = address.upper()
         LOG.debug("RPCFunctions.getParamsetDescription: address=%s, paramset_type=%s", address, paramset_type)
@@ -361,6 +364,7 @@ class RPCFunctions():
         LOG.debug("RPCFunctions.getVersion")
         return "pydevccu {}".format(const.VERSION)
 
+    @cache
     def getMetadata(self, object_id, data_id):
         LOG.debug("RPCFunctions.getMetadata: object_id=%s, data_id=%s", object_id, data_id)
         address = object_id.upper()
