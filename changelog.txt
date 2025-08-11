@@ -1,3 +1,6 @@
+Version 0.1.15 (2025-08-11)
+- Improve performance
+
 Version 0.1.14 (2025-07-23)
 - Add HmIP-SMO230
 - Update HmIP-BWTH

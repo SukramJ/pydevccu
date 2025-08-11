@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name        = "pydevccu"
-version     = "0.1.14"
+version     = "0.1.15"
 license     = {text = "MIT License"}
 description = "Virtual HomeMatic CCU XML-RPC backend."
 readme      = "README.md"
