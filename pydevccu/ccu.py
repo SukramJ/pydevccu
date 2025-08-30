@@ -367,25 +367,25 @@ class RPCFunctions():
     @cache
     def getMetadata(self, object_id, data_id):
         LOG.debug("RPCFunctions.getMetadata: object_id=%s, data_id=%s", object_id, data_id)
-        address = object_id.upper()
-        device = self.device_by_address.get(address)
-        if device is not None:
-            if data_id in device:
-                return device.get(data_id)
-            if data_id == const.ATTR_NAME:
-                if device.get(const.ATTR_CHILDREN):
-                    return "{} {}".format(
-                        device.get(const.ATTR_TYPE),
-                        device.get(const.ATTR_ADDRESS)
-                    )
-                else:
-                    return "{} {}".format(
-                        device.get(const.ATTR_PARENT_TYPE),
-                        device.get(const.ATTR_ADDRESS)
-                    )
+        address = object_id.upper().partition(":")[0]
+        if (device := self.device_by_address.get(address)) is None:
+            raise Exception
+        if data_id in device:
+            return device.get(data_id)
+        if data_id == const.ATTR_NAME:
+            if device.get(const.ATTR_CHILDREN):
+                return "{} {}".format(
+                    device.get(const.ATTR_TYPE),
+                    device.get(const.ATTR_ADDRESS)
+                )
             else:
-                return None
-        raise Exception
+                return "{} {}".format(
+                    device.get(const.ATTR_PARENT_TYPE),
+                    device.get(const.ATTR_ADDRESS)
+                )
+        else:
+            return None
+
 
     def clientServerInitialized(self, interface_id):
         LOG.debug("RPCFunctions.clientServerInitialized")
