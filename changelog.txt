@@ -1,3 +1,6 @@
+Version 0.1.16 (2025-08-30)
+- Add HmIP-LSC
+
 Version 0.1.15 (2025-08-11)
 - Improve performance
 

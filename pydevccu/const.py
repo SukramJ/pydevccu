@@ -2,7 +2,7 @@
 Constants used in pydevccu
 """
 
-VERSION = '0.1.8'
+VERSION = '0.1.9'
 
 IP_LOCALHOST_V4 = '127.0.0.1'
 IP_LOCALHOST_V6 = '::1'
