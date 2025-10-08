@@ -4,12 +4,8 @@ import os
 import sys
 import logging
 import threading
-import json
 from functools import cache
-try:
-    import orjson as _fastjson  # type: ignore
-except Exception:  # pragma: no cover - optional dependency
-    _fastjson = None
+import orjson
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
 from pydevccu.converter import CONVERTABLE_PARAMETERS, convert_combined_parameter_to_paramset
@@ -28,11 +24,8 @@ def initParamsets():
 
 def _load_json_file(path):
     """Load JSON from file efficiently, using orjson if available."""
-    if _fastjson is not None:
-        with open(path, 'rb') as fptr:
-            return _fastjson.loads(fptr.read())
-    with open(path, 'r') as fptr:
-        return json.load(fptr)
+    with open(path, 'rb') as fptr:
+        return orjson.loads(fptr.read())
 
 # pylint: disable=too-many-instance-attributes
 class RPCFunctions():
@@ -57,6 +50,10 @@ class RPCFunctions():
             self.logic_devices = []
             # Index for fast address-based lookups to avoid O(n) scans
             self.device_by_address = {}
+            # Caches for paramset handling
+            self._paramset_defaults = {}           # (address, key) -> defaults dict
+            self._paramset_compiled = {}           # (address, key) -> compiled dict
+            self._paramset_dirty = set()           # set of (address, key) that need recompute
             self._loadDevices(devices)
             if not os.path.exists(const.PARAMSETS_DB) and persistance:
                 initParamsets()
@@ -135,6 +132,13 @@ class RPCFunctions():
                         del self.paramset_descriptions[del_address]
                     if del_address in self.paramsets:
                         del self.paramsets[del_address]
+                    # Clear paramset caches for this address
+                    key_values = (del_address.upper(), const.PARAMSET_ATTR_VALUES)
+                    key_master = (del_address.upper(), const.PARAMSET_ATTR_MASTER)
+                    for key in (key_values, key_master):
+                        self._paramset_defaults.pop(key, None)
+                        self._paramset_compiled.pop(key, None)
+                        self._paramset_dirty.discard(key)
                 except Exception as err:
                     LOG.warning("_removeDevices: Failed to remove %s: %s", devname, err)
             for logic_device in self.logic_devices:
@@ -142,6 +146,13 @@ class RPCFunctions():
                     logic_device.active = False
                     self.logic_devices.remove(logic_device)
         self.devices = [d for d in self.devices if d.get(const.ATTR_ADDRESS) not in addresses]
+        # Clear function-level caches as device set changed
+        try:
+            self.getDeviceDescription.cache_clear()
+            self.getParamsetDescription.cache_clear()
+            self.getMetadata.cache_clear()
+        except Exception:
+            pass
         for interface_id, proxy in self.remotes.items():
             proxy.deleteDevices(interface_id, addresses)
 
@@ -152,9 +163,8 @@ class RPCFunctions():
     def _saveParamsets(self):
         LOG.debug("Saving paramsets")
         if self.persistance:
-            with open(const.PARAMSETS_DB, 'w') as fptr:
-                json.dump(self.paramsets, fptr)
-
+            with open(const.PARAMSETS_DB, 'wb') as fptr:
+                fptr.write(orjson.dumps(self.paramsets))
     def _askDevices(self, interface_id):
         self.knownDevices = self.remotes[interface_id].listDevices(interface_id)
         LOG.debug("RPCFunctions._askDevices: %s", self.knownDevices)
@@ -300,6 +310,8 @@ class RPCFunctions():
             if paramset_key not in self.paramsets[address]:
                 self.paramsets[address][paramset_key] = {}
             self.paramsets[address][paramset_key][value_key] = value
+            # mark compiled cache dirty for this address/paramset
+            self._paramset_dirty.add((address, paramset_key))
             self._fireEvent(self.interface_id, address, value_key, value)
 
     @cache
@@ -325,19 +337,37 @@ class RPCFunctions():
             raise Exception
         if paramset_key not in [const.PARAMSET_ATTR_MASTER, const.PARAMSET_ATTR_VALUES]:
             raise Exception
-        data = {}
-        pd = self.paramset_descriptions[address][paramset_key]
-        for parameter in pd.keys():
-            if pd[parameter][const.ATTR_FLAGS] & const.PARAMSET_FLAG_INTERNAL:
-                continue
-            try:
-                data[parameter] = self.paramsets[address][paramset_key][parameter]
-            except:
-                data[parameter] = self.paramset_descriptions[address][paramset_key][parameter][const.PARAMSET_ATTR_DEFAULT]
-                if self.paramset_descriptions[address][paramset_key][parameter][const.ATTR_TYPE] == const.PARAMSET_TYPE_ENUM:
-                    if not isinstance(data[parameter], int):
-                        data[parameter] = self.paramset_descriptions[address][paramset_key][parameter][const.PARAMSET_ATTR_VALUE_LIST].index(data[parameter])
-        return data
+        key = (address, paramset_key)
+        # Return cached compiled paramset if available and not dirty
+        if key in self._paramset_compiled and key not in self._paramset_dirty:
+            return self._paramset_compiled[key]
+        # Build defaults lazily
+        defaults = self._paramset_defaults.get(key)
+        if defaults is None:
+            pd = self.paramset_descriptions[address][paramset_key]
+            built = {}
+            for parameter, pdata in pd.items():
+                if pdata[const.ATTR_FLAGS] & const.PARAMSET_FLAG_INTERNAL:
+                    continue
+                value = pdata[const.PARAMSET_ATTR_DEFAULT]
+                if pdata[const.ATTR_TYPE] == const.PARAMSET_TYPE_ENUM:
+                    if not isinstance(value, int):
+                        value = pdata[const.PARAMSET_ATTR_VALUE_LIST].index(value)
+                built[parameter] = value
+            defaults = built
+            self._paramset_defaults[key] = defaults
+        # Compose result as defaults + current overrides
+        result = defaults.copy()
+        try:
+            overrides = self.paramsets[address][paramset_key]
+            result.update(overrides)
+        except Exception:
+            pass
+        # Store compiled and mark clean
+        self._paramset_compiled[key] = result
+        if key in self._paramset_dirty:
+            self._paramset_dirty.discard(key)
+        return result
 
     def init(self, url, interface_id=None):
         LOG.debug("RPCFunctions.init: url=%s, interface_id=%s", url, interface_id)
