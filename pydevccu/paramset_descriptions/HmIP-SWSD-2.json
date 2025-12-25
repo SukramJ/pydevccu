@@ -1,0 +1,838 @@
+{
+  "VCU2098109": {
+    "SERVICE": {
+      "OTAU_ATTEMPTS_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "OTAU_ATTEMPTS_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "TEST_STATUS": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "TEST_STATUS",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "COMMUNICATION_TEST_COMMAND_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "COMMUNICATION_TEST_COMMAND_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "COMMUNICATION_TEST_RECEIVED_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "COMMUNICATION_TEST_RECEIVED_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "BOOTLOADER_VERSION": {
+        "MIN": "0.0.0",
+        "OPERATIONS": 1,
+        "MAX": "255.255.255",
+        "FLAGS": 1,
+        "ID": "BOOTLOADER_VERSION",
+        "TYPE": "STRING",
+        "DEFAULT": "0.0.0"
+      },
+      "HARDWARE_VERSION": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 65535,
+        "FLAGS": 1,
+        "ID": "HARDWARE_VERSION",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "SMOKE_TEST_COMMAND_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "SMOKE_TEST_COMMAND_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "INTRUSION_ALARM_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "INTRUSION_ALARM_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "OS_VERSION": {
+        "MIN": "0.0.0",
+        "OPERATIONS": 1,
+        "MAX": "255.255.255",
+        "FLAGS": 1,
+        "ID": "OS_VERSION",
+        "TYPE": "STRING",
+        "DEFAULT": "0.0.0"
+      },
+      "WAKEUP_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 1048560,
+        "FLAGS": 1,
+        "ID": "WAKEUP_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "SECONDARY_ALARM_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "SECONDARY_ALARM_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "APPLICATION_VERSION": {
+        "MIN": "0.0.0",
+        "OPERATIONS": 1,
+        "MAX": "255.255.255",
+        "FLAGS": 1,
+        "ID": "APPLICATION_VERSION",
+        "TYPE": "STRING",
+        "DEFAULT": "0.0.0"
+      },
+      "PRIMARY_ALARM_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "PRIMARY_ALARM_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "SMOKE_TEST_BUTTON_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "SMOKE_TEST_BUTTON_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "FACTORY_RESET_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "FACTORY_RESET_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "COMMUNICATION_TEST_BUTTON_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "COMMUNICATION_TEST_BUTTON_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      }
+    }
+  },
+  "VCU2098109:0": {
+    "MASTER": {
+      "DUTYCYCLE_LIMIT": {
+        "MIN": 0,
+        "OPERATIONS": 3,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "DUTYCYCLE_LIMIT",
+        "TYPE": "INTEGER",
+        "DEFAULT": 180
+      },
+      "DISABLE_DEVICE_ALIVE_SIGNAL": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "DISABLE_DEVICE_ALIVE_SIGNAL",
+        "TYPE": "BOOL",
+        "DEFAULT": true
+      },
+      "DISABLE_MSG_TO_AC": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "DISABLE_MSG_TO_AC",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "CYCLIC_INFO_MSG_OVERDUE_THRESHOLD": {
+        "MIN": 0,
+        "OPERATIONS": 3,
+        "MAX": 2147483647,
+        "FLAGS": 1,
+        "ID": "CYCLIC_INFO_MSG_OVERDUE_THRESHOLD",
+        "TYPE": "INTEGER",
+        "DEFAULT": 2
+      },
+      "CYCLIC_INFO_MSG_DIS": {
+        "MIN": 0,
+        "OPERATIONS": 3,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "CYCLIC_INFO_MSG_DIS",
+        "TYPE": "INTEGER",
+        "DEFAULT": 21
+      },
+      "ENABLE_ROUTING": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "ENABLE_ROUTING",
+        "TYPE": "BOOL",
+        "DEFAULT": true
+      },
+      "LOCAL_RESET_DISABLED": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "LOCAL_RESET_DISABLED",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "ARR_TIMEOUT": {
+        "MIN": 0,
+        "OPERATIONS": 3,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "ARR_TIMEOUT",
+        "TYPE": "INTEGER",
+        "DEFAULT": 10
+      },
+      "CYCLIC_INFO_MSG": {
+        "MIN": 0,
+        "OPERATIONS": 3,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "CYCLIC_INFO_MSG",
+        "TYPE": "INTEGER",
+        "DEFAULT": 1
+      },
+      "CYCLIC_INFO_MSG_DIS_UNCHANGED": {
+        "MIN": 0,
+        "OPERATIONS": 3,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "CYCLIC_INFO_MSG_DIS_UNCHANGED",
+        "TYPE": "INTEGER",
+        "DEFAULT": 21
+      }
+    },
+    "VALUES": {
+      "TIME_OF_OPERATION_STATUS": {
+        "MIN": "NORMAL",
+        "OPERATIONS": 5,
+        "MAX": "OVERFLOW",
+        "FLAGS": 1,
+        "ID": "TIME_OF_OPERATION_STATUS",
+        "TYPE": "ENUM",
+        "DEFAULT": "NORMAL",
+        "VALUE_LIST": [
+          "NORMAL",
+          "UNKNOWN",
+          "OVERFLOW"
+        ]
+      },
+      "CONFIG_PENDING": {
+        "MIN": false,
+        "OPERATIONS": 5,
+        "MAX": true,
+        "FLAGS": 9,
+        "ID": "CONFIG_PENDING",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "DUTY_CYCLE": {
+        "MIN": false,
+        "OPERATIONS": 5,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "DUTY_CYCLE",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "INSTALL_TEST": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 2,
+        "ID": "INSTALL_TEST",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "OPERATING_VOLTAGE_STATUS": {
+        "MIN": "NORMAL",
+        "OPERATIONS": 5,
+        "MAX": "EXTERNAL",
+        "FLAGS": 1,
+        "ID": "OPERATING_VOLTAGE_STATUS",
+        "TYPE": "ENUM",
+        "DEFAULT": "NORMAL",
+        "VALUE_LIST": [
+          "NORMAL",
+          "UNKNOWN",
+          "OVERFLOW",
+          "EXTERNAL"
+        ],
+        "CONTROL": "MAINTENANCE.OPERATING_VOLTAGE_STATUS"
+      },
+      "ERROR_DEGRADED_CHAMBER": {
+        "MIN": false,
+        "OPERATIONS": 5,
+        "MAX": true,
+        "FLAGS": 9,
+        "ID": "ERROR_DEGRADED_CHAMBER",
+        "TYPE": "BOOL",
+        "DEFAULT": false,
+        "CONTROL": "MAINTENANCE.ERROR_DEGRADED_CHAMBER"
+      },
+      "RSSI_PEER": {
+        "MIN": -128,
+        "OPERATIONS": 5,
+        "MAX": 127,
+        "FLAGS": 1,
+        "ID": "RSSI_PEER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "ERROR_CODE": {
+        "MIN": 0,
+        "OPERATIONS": 5,
+        "MAX": 255,
+        "FLAGS": 9,
+        "ID": "ERROR_CODE",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "UPDATE_PENDING": {
+        "MIN": false,
+        "OPERATIONS": 5,
+        "MAX": true,
+        "FLAGS": 9,
+        "ID": "UPDATE_PENDING",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "LOW_BAT": {
+        "MIN": false,
+        "OPERATIONS": 5,
+        "MAX": true,
+        "FLAGS": 9,
+        "ID": "LOW_BAT",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "UNREACH": {
+        "MIN": false,
+        "OPERATIONS": 5,
+        "MAX": true,
+        "FLAGS": 25,
+        "ID": "UNREACH",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "TIME_OF_OPERATION": {
+        "MIN": 0,
+        "OPERATIONS": 5,
+        "MAX": 1415491200,
+        "FLAGS": 1,
+        "ID": "TIME_OF_OPERATION",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "RSSI_DEVICE": {
+        "MIN": -128,
+        "OPERATIONS": 5,
+        "MAX": 127,
+        "FLAGS": 1,
+        "ID": "RSSI_DEVICE",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "OPERATING_VOLTAGE": {
+        "MIN": 0.0,
+        "UNIT": "V",
+        "OPERATIONS": 5,
+        "MAX": 25.2,
+        "FLAGS": 1,
+        "ID": "OPERATING_VOLTAGE",
+        "TYPE": "FLOAT",
+        "DEFAULT": 0.0,
+        "CONTROL": "MAINTENANCE.OPERATING_VOLTAGE"
+      }
+    },
+    "SERVICE": {
+      "OTAU_ATTEMPTS_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "OTAU_ATTEMPTS_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "TEST_STATUS": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "TEST_STATUS",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "COMMUNICATION_TEST_COMMAND_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "COMMUNICATION_TEST_COMMAND_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "COMMUNICATION_TEST_RECEIVED_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "COMMUNICATION_TEST_RECEIVED_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "BOOTLOADER_VERSION": {
+        "MIN": "0.0.0",
+        "OPERATIONS": 1,
+        "MAX": "255.255.255",
+        "FLAGS": 1,
+        "ID": "BOOTLOADER_VERSION",
+        "TYPE": "STRING",
+        "DEFAULT": "0.0.0"
+      },
+      "HARDWARE_VERSION": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 65535,
+        "FLAGS": 1,
+        "ID": "HARDWARE_VERSION",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "SMOKE_TEST_COMMAND_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "SMOKE_TEST_COMMAND_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "INTRUSION_ALARM_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "INTRUSION_ALARM_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "OS_VERSION": {
+        "MIN": "0.0.0",
+        "OPERATIONS": 1,
+        "MAX": "255.255.255",
+        "FLAGS": 1,
+        "ID": "OS_VERSION",
+        "TYPE": "STRING",
+        "DEFAULT": "0.0.0"
+      },
+      "WAKEUP_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 1048560,
+        "FLAGS": 1,
+        "ID": "WAKEUP_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "SECONDARY_ALARM_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "SECONDARY_ALARM_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "APPLICATION_VERSION": {
+        "MIN": "0.0.0",
+        "OPERATIONS": 1,
+        "MAX": "255.255.255",
+        "FLAGS": 1,
+        "ID": "APPLICATION_VERSION",
+        "TYPE": "STRING",
+        "DEFAULT": "0.0.0"
+      },
+      "PRIMARY_ALARM_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "PRIMARY_ALARM_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "SMOKE_TEST_BUTTON_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "SMOKE_TEST_BUTTON_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "FACTORY_RESET_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "FACTORY_RESET_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "COMMUNICATION_TEST_BUTTON_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "COMMUNICATION_TEST_BUTTON_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      }
+    }
+  },
+  "VCU2098109:1": {
+    "MASTER": {
+      "GROUP_8": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "GROUP_8",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "GROUP_1": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "GROUP_1",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "GROUP_2": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "GROUP_2",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "GROUP_3": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "GROUP_3",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "GROUP_4": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "GROUP_4",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "GROUP_5": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "GROUP_5",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "GROUP_6": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "GROUP_6",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "REPEAT_ENABLE": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "REPEAT_ENABLE",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      },
+      "GROUP_7": {
+        "MIN": false,
+        "OPERATIONS": 3,
+        "MAX": true,
+        "FLAGS": 1,
+        "ID": "GROUP_7",
+        "TYPE": "BOOL",
+        "DEFAULT": false
+      }
+    },
+    "VALUES": {
+      "SMOKE_DETECTOR_ALARM_STATUS": {
+        "MIN": "IDLE_OFF",
+        "OPERATIONS": 5,
+        "MAX": "SECONDARY_ALARM",
+        "FLAGS": 1,
+        "ID": "SMOKE_DETECTOR_ALARM_STATUS",
+        "TYPE": "ENUM",
+        "DEFAULT": "IDLE_OFF",
+        "VALUE_LIST": [
+          "IDLE_OFF",
+          "PRIMARY_ALARM",
+          "INTRUSION_ALARM",
+          "SECONDARY_ALARM"
+        ],
+        "CONTROL": "DANGER.STATE"
+      },
+      "DIRT_LEVEL": {
+        "MIN": 0.0,
+        "UNIT": "100%",
+        "OPERATIONS": 5,
+        "MAX": 1.01,
+        "FLAGS": 1,
+        "ID": "DIRT_LEVEL",
+        "TYPE": "FLOAT",
+        "DEFAULT": 0.0,
+        "CONTROL": "SMOKE_DETECTOR.DIRT_LEVEL"
+      },
+      "SMOKE_LEVEL": {
+        "MIN": 0.0,
+        "UNIT": "100%",
+        "OPERATIONS": 5,
+        "MAX": 1.01,
+        "FLAGS": 1,
+        "ID": "SMOKE_LEVEL",
+        "TYPE": "FLOAT",
+        "DEFAULT": 0.0,
+        "CONTROL": "SMOKE_DETECTOR.SMOKE_LEVEL"
+      },
+      "SMOKE_DETECTOR_TEST_RESULT": {
+        "MIN": "NONE",
+        "OPERATIONS": 5,
+        "MAX": "COMMUNICATION_TEST_OK",
+        "FLAGS": 1,
+        "ID": "SMOKE_DETECTOR_TEST_RESULT",
+        "TYPE": "ENUM",
+        "DEFAULT": "NONE",
+        "VALUE_LIST": [
+          "NONE",
+          "SMOKE_TEST_OK",
+          "SMOKE_TEST_FAILED",
+          "COMMUNICATION_TEST_SENT",
+          "COMMUNICATION_TEST_OK"
+        ]
+      },
+      "SMOKE_DETECTOR_COMMAND": {
+        "MIN": "RESERVED_ALARM_OFF",
+        "OPERATIONS": 2,
+        "MAX": "COMMUNICATION_TEST_REPEATED",
+        "FLAGS": 1,
+        "ID": "SMOKE_DETECTOR_COMMAND",
+        "TYPE": "ENUM",
+        "DEFAULT": "RESERVED_ALARM_OFF",
+        "VALUE_LIST": [
+          "RESERVED_ALARM_OFF",
+          "INTRUSION_ALARM_OFF",
+          "INTRUSION_ALARM",
+          "SMOKE_TEST",
+          "COMMUNICATION_TEST",
+          "COMMUNICATION_TEST_REPEATED"
+        ],
+        "CONTROL": "SMOKE_DETECTOR.COMMAND"
+      }
+    },
+    "SERVICE": {
+      "OTAU_ATTEMPTS_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "OTAU_ATTEMPTS_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "TEST_STATUS": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "TEST_STATUS",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "COMMUNICATION_TEST_COMMAND_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "COMMUNICATION_TEST_COMMAND_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "COMMUNICATION_TEST_RECEIVED_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "COMMUNICATION_TEST_RECEIVED_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "BOOTLOADER_VERSION": {
+        "MIN": "0.0.0",
+        "OPERATIONS": 1,
+        "MAX": "255.255.255",
+        "FLAGS": 1,
+        "ID": "BOOTLOADER_VERSION",
+        "TYPE": "STRING",
+        "DEFAULT": "0.0.0"
+      },
+      "HARDWARE_VERSION": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 65535,
+        "FLAGS": 1,
+        "ID": "HARDWARE_VERSION",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "SMOKE_TEST_COMMAND_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "SMOKE_TEST_COMMAND_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "INTRUSION_ALARM_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "INTRUSION_ALARM_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "OS_VERSION": {
+        "MIN": "0.0.0",
+        "OPERATIONS": 1,
+        "MAX": "255.255.255",
+        "FLAGS": 1,
+        "ID": "OS_VERSION",
+        "TYPE": "STRING",
+        "DEFAULT": "0.0.0"
+      },
+      "WAKEUP_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 1048560,
+        "FLAGS": 1,
+        "ID": "WAKEUP_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "SECONDARY_ALARM_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "SECONDARY_ALARM_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "APPLICATION_VERSION": {
+        "MIN": "0.0.0",
+        "OPERATIONS": 1,
+        "MAX": "255.255.255",
+        "FLAGS": 1,
+        "ID": "APPLICATION_VERSION",
+        "TYPE": "STRING",
+        "DEFAULT": "0.0.0"
+      },
+      "PRIMARY_ALARM_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "PRIMARY_ALARM_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "SMOKE_TEST_BUTTON_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "SMOKE_TEST_BUTTON_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "FACTORY_RESET_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "FACTORY_RESET_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      },
+      "COMMUNICATION_TEST_BUTTON_COUNTER": {
+        "MIN": 0,
+        "OPERATIONS": 1,
+        "MAX": 255,
+        "FLAGS": 1,
+        "ID": "COMMUNICATION_TEST_BUTTON_COUNTER",
+        "TYPE": "INTEGER",
+        "DEFAULT": 0
+      }
+    }
+  }
+}
