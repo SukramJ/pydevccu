@@ -5,7 +5,7 @@ import sys
 import logging
 import threading
 from functools import cache
-import orjson
+from . import compat
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
 from pydevccu.converter import CONVERTABLE_PARAMETERS, convert_combined_parameter_to_paramset
@@ -25,7 +25,7 @@ def initParamsets():
 def _load_json_file(path):
     """Load JSON from file efficiently, using orjson if available."""
     with open(path, 'rb') as fptr:
-        return orjson.loads(fptr.read())
+        return compat.loads(fptr.read())
 
 # pylint: disable=too-many-instance-attributes
 class RPCFunctions():
@@ -164,7 +164,7 @@ class RPCFunctions():
         LOG.debug("Saving paramsets")
         if self.persistance:
             with open(const.PARAMSETS_DB, 'wb') as fptr:
-                fptr.write(orjson.dumps(self.paramsets))
+                fptr.write(compat.dumps(self.paramsets))
     def _askDevices(self, interface_id):
         self.knownDevices = self.remotes[interface_id].listDevices(interface_id)
         LOG.debug("RPCFunctions._askDevices: %s", self.knownDevices)

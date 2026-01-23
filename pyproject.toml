@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name        = "pydevccu"
-version     = "0.1.20"
+version     = "0.1.21"
 license     = {text = "MIT License"}
 description = "Virtual HomeMatic CCU XML-RPC backend."
 readme      = "README.md"
@@ -19,12 +19,17 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: Free Threading :: 2 - Beta",
     "Topic :: Home Automation",
 ]
 requires-python = ">=3.13.0"
-dependencies    = [
-    "orjson>=3.11.0",
-]
+dependencies    = []
+
+[project.optional-dependencies]
+# orjson provides faster JSON serialization but does not support free-threaded Python.
+# The compat module automatically falls back to stdlib json when orjson is unavailable.
+fast = ["orjson>=3.11.0"]
 [project.urls]
 "Source Code" = "https://github.com/sukramj/pydevccu"
 "Bug Reports" = "https://github.com/sukramj/pydevccu/issues"
