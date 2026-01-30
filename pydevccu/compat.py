@@ -14,7 +14,7 @@ from __future__ import annotations
 import json as _stdlib_json
 import sys
 import sysconfig
-from typing import Any, Final
+from typing import TYPE_CHECKING, Any, Final
 
 # =============================================================================
 # Free-Threading Detection
@@ -52,15 +52,18 @@ FREE_THREADED_BUILD: Final[bool] = is_free_threaded_build()
 
 # Try to import orjson, but only use it if NOT in free-threaded mode
 _USE_ORJSON: bool = False
-_orjson: Any = None
 
-if not FREE_THREADED_BUILD:
-    try:
-        import orjson as _orjson
+if TYPE_CHECKING:
+    import orjson as _orjson
+else:
+    _orjson: Any = None
+    if not FREE_THREADED_BUILD:
+        try:
+            import orjson as _orjson
 
-        _USE_ORJSON = True
-    except ImportError:
-        pass
+            _USE_ORJSON = True
+        except ImportError:
+            pass
 
 
 class JSONDecodeError(Exception):
@@ -119,12 +122,10 @@ def loads(data: bytes | str) -> Any:
 # =============================================================================
 
 __all__ = [
-    # Detection
     "FREE_THREADED_BUILD",
-    "is_free_threaded_build",
-    "is_gil_enabled",
-    # JSON API
     "JSONDecodeError",
     "dumps",
+    "is_free_threaded_build",
+    "is_gil_enabled",
     "loads",
 ]

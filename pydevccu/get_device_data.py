@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 """
 Script to fetch device data for given HomeMatic device ID from CCU.
 The two resulting files will be stored in the folders:
@@ -19,9 +18,12 @@ TLS/SSL and authentication are NOT supported!
 
 Python 3 is required to execute this script.
 """
+
+from __future__ import annotations
+
+import json
 import os
 import random
-import json
 from xmlrpc.client import ServerProxy
 
 ### Configuration globals ###
@@ -45,46 +47,48 @@ if not os.path.exists(DIR_PARAMSET_DESCRIPTIONS):
 if not os.path.exists(DEVICE_CACHE):
     print("Getting devices from CCU")
     DEVICES = PROXY.listDevices()
-    with open(DEVICE_CACHE, 'w') as fptr:
+    with open(DEVICE_CACHE, "w") as fptr:
         json.dump(DEVICES, fptr)
 
 with open(DEVICE_CACHE) as fptr:
     DEVICES = json.load(fptr)
 
+
 def anonymize_address(address):
-    address_parts = address.split(':')
+    address_parts = address.split(":")
     address_parts[0] = RANDOM_ID
-    return ':'.join(address_parts)
+    return ":".join(address_parts)
+
 
 DEVICE_TYPE = None
 DEVICE_DESCRIPTION = []
 PARAMSET_DESCRIPTION = {}
 
 for device in DEVICES:
-    if DEVICE_ID in device.get('ADDRESS'):
+    if DEVICE_ID in device.get("ADDRESS"):
         # Get device description
-        address = device['ADDRESS']
-        device['ADDRESS'] = anonymize_address(address)
-        if device.get('PARENT'):
-            device['PARENT'] =  device['ADDRESS'].split(':')[0]
-        elif device.get('CHILDREN'):
-            device['CHILDREN'] = [anonymize_address(a) for a in device['CHILDREN']]
-            DEVICE_TYPE = device.get('TYPE')
+        address = device["ADDRESS"]
+        device["ADDRESS"] = anonymize_address(address)
+        if device.get("PARENT"):
+            device["PARENT"] = device["ADDRESS"].split(":")[0]
+        elif device.get("CHILDREN"):
+            device["CHILDREN"] = [anonymize_address(a) for a in device["CHILDREN"]]
+            DEVICE_TYPE = device.get("TYPE")
         DEVICE_DESCRIPTION.append(device)
 
         # Get paramset description
-        PARAMSET_DESCRIPTION[device['ADDRESS']] = {}
-        for paramset in device.get('PARAMSETS', []):
-            PARAMSET_DESCRIPTION[device['ADDRESS']][paramset] = {}
+        PARAMSET_DESCRIPTION[device["ADDRESS"]] = {}
+        for paramset in device.get("PARAMSETS", []):
+            PARAMSET_DESCRIPTION[device["ADDRESS"]][paramset] = {}
             try:
-                PARAMSET_DESCRIPTION[device['ADDRESS']][paramset] = PROXY.getParamsetDescription(address, paramset)
+                PARAMSET_DESCRIPTION[device["ADDRESS"]][paramset] = PROXY.getParamsetDescription(address, paramset)
             except Exception as err:
                 print(err)
 
 print("Saving device of type %s to:" % DEVICE_TYPE)
-with open(os.path.join(DIR_DEVICE_DESCRIPTIONS, "%s.json" % DEVICE_TYPE), 'w') as fptr:
+with open(os.path.join(DIR_DEVICE_DESCRIPTIONS, "%s.json" % DEVICE_TYPE), "w") as fptr:
     json.dump(DEVICE_DESCRIPTION, fptr, indent=0)
     print(os.path.abspath(fptr.name))
-with open(os.path.join(DIR_PARAMSET_DESCRIPTIONS, "%s.json" % DEVICE_TYPE), 'w') as fptr:
+with open(os.path.join(DIR_PARAMSET_DESCRIPTIONS, "%s.json" % DEVICE_TYPE), "w") as fptr:
     json.dump(PARAMSET_DESCRIPTION, fptr, indent=0)
     print(os.path.abspath(fptr.name))

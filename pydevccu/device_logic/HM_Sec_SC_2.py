@@ -3,16 +3,19 @@ Logic module for HM-Sec-SC-2 (VCU0000240).
 Switch between open / closed, toggle LOWBAT every 5 events.
 """
 
+from __future__ import annotations
+
+import logging
+import random
 import sys
 import time
-import random
-import logging
 
 LOG = logging.getLogger(__name__)
 if sys.stdout.isatty():
     logging.basicConfig(level=logging.DEBUG)
 
-class HM_Sec_SC_2(object):
+
+class HM_Sec_SC_2:
     def __init__(self, rpcfunctions, startupdelay=5, interval=60):
         self.rpcfunctions = rpcfunctions
         self.name = "HM-Sec-SC-2"

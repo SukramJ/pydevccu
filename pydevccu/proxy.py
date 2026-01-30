@@ -2,8 +2,11 @@
 ServerProxy implementation with lock when request is executing
 """
 
-import xmlrpc.client
+from __future__ import annotations
+
 import threading
+import xmlrpc.client
+
 
 # pylint: disable=too-few-public-methods
 class LockingServerProxy(xmlrpc.client.ServerProxy):

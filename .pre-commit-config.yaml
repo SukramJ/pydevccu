@@ -1,0 +1,64 @@
+---
+repos:
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.14.0
+    hooks:
+      - id: ruff
+        args:
+          - --fix
+      - id: ruff-format
+        files: ^((pydevccu|tests)/.+)?[^/]+\.py$
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.0
+    hooks:
+      - id: codespell
+        args:
+          - --ignore-words-list=hass,ist,als,alle,oder,unter,manuell,methode,methoden,programm,temperatur
+          - --skip="./.*,*.csv,*.json"
+          - --quiet-level=2
+        exclude_types: [csv, json]
+        exclude: ^tests/fixtures/
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.9.3
+    hooks:
+      - id: bandit
+        args:
+          - --quiet
+          - --format=custom
+          - --configfile=tests/bandit.yaml
+        files: ^(pydevccu|tests)/.+\.py$
+        exclude: >-
+          ^pydevccu/(ccu|converter|proxy|hm_xml_to_json|
+          hmip_xml_to_json|get_device_data|device_logic/).*\.py$
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-executables-have-shebangs
+        stages: [manual]
+      - id: check-json
+        exclude: (.vscode|.devcontainer)
+      - id: no-commit-to-branch
+        args:
+          - --branch=master
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.37.0
+    hooks:
+      - id: yamllint
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        files: ^.+\.(md|json|ya?ml)$
+        exclude: ^(\.github/)
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: script/run-in-env.sh mypy
+        language: script
+        types_or: [python, pyi]
+        require_serial: true
+        files: ^pydevccu/.+\.py$
+        exclude: >-
+          ^pydevccu/(ccu|converter|proxy|hm_xml_to_json|
+          hmip_xml_to_json|get_device_data|device_logic/).*\.py$

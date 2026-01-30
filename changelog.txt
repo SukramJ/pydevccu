@@ -1,3 +1,16 @@
+Version 0.2.0 (2026-01-30)
+- Add VirtualCCU orchestrator for complete CCU/OpenCCU simulation
+- Add JSON-RPC server with CCU-compatible API (/api/homematic.cgi)
+- Add BackendMode enum (HOMEGEAR, CCU, OPENCCU)
+- Add StateManager for unified state management
+- Add SessionManager for JSON-RPC authentication
+- Add ReGa script engine with pattern matching for aiohomematic scripts
+- Add Program, SystemVariable, Room, and Function management
+- Add Backup and Firmware update simulation
+- Add HTTP endpoints for backup download and maintenance
+- Add aiohttp as new dependency
+- Add comprehensive test suite
+
 Version 0.1.21 (2026-01-23)
 - Add compatibility layer for free-threading support
 
@@ -223,7 +236,7 @@ Version 0.0.5 (2019-12-31)
 - Add automated device logic for HM-Sen-MDIR-WM55
 
 Version 0.0.4 (2019-12-30)
-- Paramset persistance has to be enabled if required
+- Paramset persistence has to be enabled if required
 - Raise exception in `getValue` if queried parameter does not exist
 - Device addresses are now case insensitive
 - Add callback-support based on fired events
