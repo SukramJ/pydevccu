@@ -1,0 +1,4 @@
+bandit==1.9.3
+codespell==2.4.0
+ruff==0.14.0
+yamllint==1.37.0

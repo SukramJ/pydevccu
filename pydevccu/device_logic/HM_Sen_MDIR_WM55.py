@@ -4,16 +4,19 @@ Switch between motion, toggle LOWBAT every 5 events,
 random brightness from 60 to 90, press on channel 1.
 """
 
+from __future__ import annotations
+
+import logging
+import random
 import sys
 import time
-import random
-import logging
 
 LOG = logging.getLogger(__name__)
 if sys.stdout.isatty():
     logging.basicConfig(level=logging.DEBUG)
 
-class HM_Sen_MDIR_WM55(object):
+
+class HM_Sen_MDIR_WM55:
     def __init__(self, rpcfunctions, startupdelay=5, interval=60):
         self.rpcfunctions = rpcfunctions
         self.name = "HM-Sen-MDIR-WM55"

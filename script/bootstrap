@@ -1,0 +1,12 @@
+#!/bin/sh
+# Resolve all dependencies that the application requires to run.
+
+# Stop on errors
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "Installing development dependencies..."
+python -m pip install --upgrade pip
+pip install -r requirements_test.txt
+pip install -e ".[test]"

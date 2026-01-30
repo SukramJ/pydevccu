@@ -1,8 +1,38 @@
+*.pyc
+*.xml
+*.json
+*.tar.gz
+
+# Setuptools distribution folder.
 dist/
+
+# Python egg metadata, regenerated from source files by setuptools.
+*.egg-info/
 pydevccu.egg-info/
-venv
-paramsets_db.json
-start*
+
+# Tox stuff, lint
+/.tox/
+/.pylint.d/
+/*_mj.py
+script/*_mj.sh
+/.idea/
 .idea
+build
 /build
+
+venv
+
+# Claude Code local settings
+.claude/
+/.claude
+
+.coverage
+.output.txt
+*.out
+*.out.txt
+*.log
+/tmp
+
+paramsets_db.json
+
 .DS_Store

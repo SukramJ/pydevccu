@@ -1,45 +1,58 @@
 # pylint: disable=missing-module-docstring,missing-class-docstring,missing-function-docstring,protected-access,line-too-long,broad-except,bare-except,invalid-name
+from __future__ import annotations
+
 import datetime
+from functools import cache
+import logging
 import os
 import sys
-import logging
 import threading
-from functools import cache
-from . import compat
-from xmlrpc.server import SimpleXMLRPCServer
-from xmlrpc.server import SimpleXMLRPCRequestHandler
+from xmlrpc.server import SimpleXMLRPCRequestHandler, SimpleXMLRPCServer
+
 from pydevccu.converter import CONVERTABLE_PARAMETERS, convert_combined_parameter_to_paramset
 
-from . import const
+from . import compat, const, device_logic
 from .proxy import LockingServerProxy
-from . import device_logic
 
 LOG = logging.getLogger(__name__)
 if sys.stdout.isatty():
     logging.basicConfig(level=logging.DEBUG)
 
+
 def initParamsets():
-    with open(const.PARAMSETS_DB, 'w') as fptr:
+    with open(const.PARAMSETS_DB, "w") as fptr:
         fptr.write("{}")
+
 
 def _load_json_file(path):
     """Load JSON from file efficiently, using orjson if available."""
-    with open(path, 'rb') as fptr:
+    with open(path, "rb") as fptr:
         return compat.loads(fptr.read())
 
+
 # pylint: disable=too-many-instance-attributes
-class RPCFunctions():
+class RPCFunctions:
     """
     Object holding the methods the XML-RPC server should provide.
     """
-    def __init__(self, devices, persistance, logic):
+
+    def _dispatch(self, method, params):
+        """Dispatch XML-RPC method calls with logging."""
+        LOG.debug("XML-RPC dispatch: method=%s, params=%s", method, params)
+        func = getattr(self, method, None)
+        if func is None:
+            LOG.warning("XML-RPC method not found: %s", method)
+            raise AttributeError(f"Method {method} not found")
+        return func(*params)
+
+    def __init__(self, devices, persistence, logic):
         LOG.debug("RPCFunctions.__init__")
         self.remotes = {}
         try:
             self.active = False
             self.knownDevices = []
             self.interface_id = "pydevccu"
-            self.persistance = persistance
+            self.persistence = persistence
             self.devices = []
             self.paramset_descriptions = {}
             self.supported_devices = {}
@@ -51,11 +64,11 @@ class RPCFunctions():
             # Index for fast address-based lookups to avoid O(n) scans
             self.device_by_address = {}
             # Caches for paramset handling
-            self._paramset_defaults = {}           # (address, key) -> defaults dict
-            self._paramset_compiled = {}           # (address, key) -> compiled dict
-            self._paramset_dirty = set()           # set of (address, key) that need recompute
+            self._paramset_defaults = {}  # (address, key) -> defaults dict
+            self._paramset_compiled = {}  # (address, key) -> compiled dict
+            self._paramset_dirty = set()  # set of (address, key) that need recompute
             self._loadDevices(devices)
-            if not os.path.exists(const.PARAMSETS_DB) and persistance:
+            if not os.path.exists(const.PARAMSETS_DB) and persistence:
                 initParamsets()
             self._loadParamsets()
         except Exception as err:
@@ -71,7 +84,7 @@ class RPCFunctions():
         dd_path = os.path.join(script_dir, const.DEVICE_DESCRIPTIONS)
         pd_path = os.path.join(script_dir, const.PARAMSET_DESCRIPTIONS)
         for filename in os.listdir(dd_path):
-            devname = filename.split('.')[0].replace('_', ' ')
+            devname = filename.split(".")[0].replace("_", " ")
             if devname in self.active_devices:
                 continue
             if devices is not None:
@@ -85,7 +98,7 @@ class RPCFunctions():
                 # Populate fast lookup index (store by uppercase to match later queries)
                 if isinstance(d_addr, str):
                     self.device_by_address[d_addr.upper()] = device
-                if not ':' in d_addr:
+                if ":" not in d_addr:
                     self.supported_devices[devname] = d_addr
                     break
             pd = _load_json_file(os.path.join(pd_path, filename))
@@ -96,9 +109,7 @@ class RPCFunctions():
                 logic_device = logic_module(self, **self.logic)
                 logic_device.active = True
                 self.logic_devices.append(logic_device)
-                logic_thread = threading.Thread(name=logic_device.name,
-                                                target=logic_device.work,
-                                                daemon=True)
+                logic_thread = threading.Thread(name=logic_device.name, target=logic_device.work, daemon=True)
                 logic_thread.start()
             self.active_devices.append(devname)
         return added_devices
@@ -118,9 +129,9 @@ class RPCFunctions():
                 del_address = None
                 address = dd.get(const.ATTR_ADDRESS)
                 try:
-                    if not ':' in address and dd.get(const.ATTR_TYPE) == devname:
-                        del_address = address
-                    elif ':' in address and dd.get(const.ATTR_PARENT_TYPE) == devname:
+                    if (":" not in address and dd.get(const.ATTR_TYPE) == devname) or (
+                        ":" in address and dd.get(const.ATTR_PARENT_TYPE) == devname
+                    ):
                         del_address = address
                     if del_address is None:
                         continue
@@ -157,20 +168,19 @@ class RPCFunctions():
             proxy.deleteDevices(interface_id, addresses)
 
     def _loadParamsets(self):
-        if self.persistance:
+        if self.persistence:
             self.paramsets = _load_json_file(const.PARAMSETS_DB)
 
     def _saveParamsets(self):
         LOG.debug("Saving paramsets")
-        if self.persistance:
-            with open(const.PARAMSETS_DB, 'wb') as fptr:
+        if self.persistence:
+            with open(const.PARAMSETS_DB, "wb") as fptr:
                 fptr.write(compat.dumps(self.paramsets))
+
     def _askDevices(self, interface_id):
         self.knownDevices = self.remotes[interface_id].listDevices(interface_id)
         LOG.debug("RPCFunctions._askDevices: %s", self.knownDevices)
-        t = threading.Thread(name='_pushDevices',
-                             target=self._pushDevices,
-                             args=(interface_id, ))
+        t = threading.Thread(name="_pushDevices", target=self._pushDevices, args=(interface_id,))
         t.start()
 
     def _pushDevices(self, interface_id):
@@ -189,8 +199,7 @@ class RPCFunctions():
             self.remotes[interface_id].newDevices(interface_id, newDevices)
         if deleteDevices:
             self.remotes[interface_id].deleteDevices(interface_id, deleteDevices)
-        LOG.debug("RPCFunctions._pushDevices: pushed new: %i, deleted: %i",
-                  len(newDevices), len(deleteDevices))
+        LOG.debug("RPCFunctions._pushDevices: pushed new: %i, deleted: %i", len(newDevices), len(deleteDevices))
 
     def _fireEvent(self, interface_id, address, value_key, value):
         address = address.upper()
@@ -214,7 +223,12 @@ class RPCFunctions():
     # pylint: disable=no-self-use
     def getServiceMessages(self):
         LOG.debug("RPCFunctions.getServiceMessages")
-        return [['VCU0000001:1', const.ATTR_ERROR, 7]]
+        return [["VCU0000001:1", const.ATTR_ERROR, 7]]
+
+    def ping(self, caller_id=None):
+        """Handle ping request from client."""
+        LOG.debug("RPCFunctions.ping: caller_id=%s", caller_id)
+        return True
 
     # pylint: disable=no-self-use
     def getAllSystemVariables(self):
@@ -246,7 +260,9 @@ class RPCFunctions():
 
     def setValue(self, address, value_key, value, force=False):
         address = address.upper()
-        LOG.debug("RPCFunctions.setValue: address=%s, value_key=%s, value=%s, force=%s", address, value_key, value, force)
+        LOG.debug(
+            "RPCFunctions.setValue: address=%s, value_key=%s, value=%s, force=%s", address, value_key, value, force
+        )
         if value_key in CONVERTABLE_PARAMETERS:
             paramset = convert_combined_parameter_to_paramset(value_key, value)
         else:
@@ -257,7 +273,13 @@ class RPCFunctions():
     # pylint: disable=too-many-arguments
     def putParamset(self, address, paramset_key, paramset, force=False):
         address = address.upper()
-        LOG.debug("RPCFunctions.putParamset: address=%s, paramset_key=%s, paramset=%s, force=%s", address, paramset_key, paramset, force)
+        LOG.debug(
+            "RPCFunctions.putParamset: address=%s, paramset_key=%s, paramset=%s, force=%s",
+            address,
+            paramset_key,
+            paramset,
+            force,
+        )
         paramsets = self.paramset_descriptions[address]
         paramset_values = paramsets[paramset_key]
         for value_key, value in paramset.items():
@@ -265,7 +287,10 @@ class RPCFunctions():
             param_type = param_data[const.ATTR_TYPE]
             if not const.PARAMSET_OPERATIONS_WRITE & param_data[const.PARAMSET_ATTR_OPERATIONS] and not force:
                 LOG.warning(
-                    "RPCFunctions.putParamset: address=%s, value_key=%s: write operation not allowed", address, value_key)
+                    "RPCFunctions.putParamset: address=%s, value_key=%s: write operation not allowed",
+                    address,
+                    value_key,
+                )
                 raise Exception
             if param_type == const.PARAMSET_TYPE_ACTION:
                 self._fireEvent(self.interface_id, address, value_key, True)
@@ -281,10 +306,14 @@ class RPCFunctions():
             if param_type == const.PARAMSET_TYPE_ENUM:
                 if not isinstance(param_data[const.PARAMSET_ATTR_MAX], str):
                     if value > float(param_data[const.PARAMSET_ATTR_MAX]):
-                        LOG.warning("RPCFunctions.putParamset: address=%s, value_key=%s: value too high", address, value_key)
+                        LOG.warning(
+                            "RPCFunctions.putParamset: address=%s, value_key=%s: value too high", address, value_key
+                        )
                         raise Exception
                     if value < float(param_data[const.PARAMSET_ATTR_MIN]):
-                        LOG.warning("RPCFunctions.putParamset: address=%s, value_key=%s: value too low", address, value_key)
+                        LOG.warning(
+                            "RPCFunctions.putParamset: address=%s, value_key=%s: value too low", address, value_key
+                        )
                         raise Exception
             if param_type in [const.PARAMSET_TYPE_FLOAT, const.PARAMSET_TYPE_INTEGER]:
                 special = param_data.get(const.PARAMSET_ATTR_SPECIAL, [])
@@ -301,10 +330,8 @@ class RPCFunctions():
                     if param_type == const.PARAMSET_TYPE_INTEGER:
                         max_val = int(max_val)
                         min_val = int(min_val)
-                    if value > max_val:
-                        value = max_val
-                    if value < min_val:
-                        value = min_val
+                    value = min(value, max_val)
+                    value = max(value, min_val)
             if address not in self.paramsets:
                 self.paramsets[address] = {}
             if paramset_key not in self.paramsets[address]:
@@ -374,9 +401,7 @@ class RPCFunctions():
         if interface_id is not None:
             try:
                 self.remotes[interface_id] = LockingServerProxy(url)
-                t = threading.Thread(name='_askDevices',
-                                     target=self._askDevices,
-                                     args=(interface_id, ))
+                t = threading.Thread(name="_askDevices", target=self._askDevices, args=(interface_id,))
                 t.start()
             except Exception as err:
                 LOG.debug("RPCFunctions.init:Exception: %s", err)
@@ -392,7 +417,8 @@ class RPCFunctions():
 
     def getVersion(self):
         LOG.debug("RPCFunctions.getVersion")
-        return "pydevccu {}".format(const.VERSION)
+        # Return CCU-compatible version string
+        return "3.87.1.20250130"
 
     @cache
     def getMetadata(self, object_id, data_id):
@@ -404,18 +430,60 @@ class RPCFunctions():
             return device.get(data_id)
         if data_id == const.ATTR_NAME:
             if device.get(const.ATTR_CHILDREN):
-                return "{} {}".format(
-                    device.get(const.ATTR_TYPE),
-                    device.get(const.ATTR_ADDRESS)
-                )
-            else:
-                return "{} {}".format(
-                    device.get(const.ATTR_PARENT_TYPE),
-                    device.get(const.ATTR_ADDRESS)
-                )
-        else:
-            return None
+                return f"{device.get(const.ATTR_TYPE)} {device.get(const.ATTR_ADDRESS)}"
+            return f"{device.get(const.ATTR_PARENT_TYPE)} {device.get(const.ATTR_ADDRESS)}"
+        return None
 
+    def setMetadata(self, address, data_id, value):
+        """Set metadata for a device."""
+        LOG.debug("RPCFunctions.setMetadata: address=%s, data_id=%s, value=%s", address, data_id, value)
+        # Store metadata (simplified implementation)
+        return True
+
+    def addLink(self, sender_address, receiver_address, name, description):
+        """Add a link between devices."""
+        LOG.debug("RPCFunctions.addLink: %s -> %s, name=%s", sender_address, receiver_address, name)
+        return True
+
+    def removeLink(self, sender_address, receiver_address):
+        """Remove a link between devices."""
+        LOG.debug("RPCFunctions.removeLink: %s -> %s", sender_address, receiver_address)
+        return True
+
+    def getLinkPeers(self, channel_address):
+        """Return link peers for a channel."""
+        LOG.debug("RPCFunctions.getLinkPeers: %s", channel_address)
+        return []
+
+    def getLinks(self, channel_address, flags):
+        """Return links for a channel."""
+        LOG.debug("RPCFunctions.getLinks: %s, flags=%s", channel_address, flags)
+        return []
+
+    def getInstallMode(self):
+        """Return remaining install mode time."""
+        LOG.debug("RPCFunctions.getInstallMode")
+        return 0
+
+    def setInstallMode(self, on=True, time=60, mode=1, device_address=None):
+        """Set install mode."""
+        LOG.debug("RPCFunctions.setInstallMode: on=%s, time=%s, mode=%s, device=%s", on, time, mode, device_address)
+        return True
+
+    def reportValueUsage(self, channel_address, value_id, ref_counter):
+        """Report value usage to the backend."""
+        LOG.debug("RPCFunctions.reportValueUsage: %s, %s, %s", channel_address, value_id, ref_counter)
+        return True
+
+    def installFirmware(self, device_address):
+        """Install firmware on a device."""
+        LOG.debug("RPCFunctions.installFirmware: %s", device_address)
+        return True
+
+    def updateFirmware(self, device_address):
+        """Update firmware on a device."""
+        LOG.debug("RPCFunctions.updateFirmware: %s", device_address)
+        return True
 
     def clientServerInitialized(self, interface_id):
         LOG.debug("RPCFunctions.clientServerInitialized")
@@ -424,27 +492,48 @@ class RPCFunctions():
             return True
         return False
 
+
 class RequestHandler(SimpleXMLRPCRequestHandler):
     """We handle requests to / and /RPC2"""
-    rpc_paths = ('/', '/RPC2',)
+
+    rpc_paths = (
+        "/",
+        "/RPC2",
+    )
+
 
 class ServerThread(threading.Thread):
     """XML-RPC server thread to handle messages from CCU / Homegear"""
-    def __init__(self, addr=(const.IP_LOCALHOST_V4, const.PORT_RF),
-                 devices=None, persistance=False, logic=False):
+
+    def __init__(self, addr=(const.IP_LOCALHOST_V4, const.PORT_RF), devices=None, persistence=False, logic=False):
         LOG.debug("ServerThread.__init__")
         threading.Thread.__init__(self)
         self.addr = addr
         LOG.debug("__init__: Registering RPC methods")
-        self._rpcfunctions = RPCFunctions(devices, persistance, logic)
+        self._rpcfunctions = RPCFunctions(devices, persistence, logic)
         LOG.debug("ServerThread.__init__: Setting up server")
-        self.server = SimpleXMLRPCServer(addr, requestHandler=RequestHandler,
-                                         logRequests=False, allow_none=True)
+        self.server = SimpleXMLRPCServer(addr, requestHandler=RequestHandler, logRequests=True, allow_none=True)
         self.server.register_introspection_functions()
         self.server.register_multicall_functions()
         LOG.debug("ServerThread.__init__: Registering RPC functions")
-        self.server.register_instance(
-            self._rpcfunctions, allow_dotted_names=True)
+        self.server.register_instance(self._rpcfunctions, allow_dotted_names=True)
+
+        # Override system.listMethods to include instance methods
+        # Python's register_introspection_functions() doesn't list instance methods
+        rpc_instance = self._rpcfunctions
+
+        def list_methods_with_instance():
+            # Get system methods from funcs
+            methods = set(self.server.funcs.keys())
+            # Add all public methods from RPCFunctions instance
+            for name in dir(rpc_instance):
+                if not name.startswith("_") and callable(getattr(rpc_instance, name, None)):
+                    methods.add(name)
+            result = sorted(methods)
+            LOG.debug("system.listMethods returning: %s", result)
+            return result
+
+        self.server.register_function(list_methods_with_instance, "system.listMethods")
 
     def run(self):
         LOG.info("Starting server at http://%s:%i", self.addr[0], self.addr[1])

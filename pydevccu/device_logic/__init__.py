@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .HM_Sec_SC_2 import HM_Sec_SC_2
 from .HM_Sen_MDIR_WM55 import HM_Sen_MDIR_WM55
 

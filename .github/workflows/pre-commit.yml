@@ -1,0 +1,43 @@
+---
+name: Pre-commit checks
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches-ignore:
+      - master
+    tags-ignore:
+      - "**"
+
+permissions:
+  contents: read
+
+jobs:
+  pre-commit:
+    if: github.repository_owner == 'SukramJ'
+    name: Run pre-commit hooks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+          cache-dependency-path: |
+            requirements.txt
+            requirements_test.txt
+            requirements_test_pre_commit.txt
+
+      - name: Install dependencies for hooks
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements_test.txt
+
+      - name: Run prek
+        run: prek run --all-files
