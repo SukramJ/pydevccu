@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Any, Final
 
 from aiohttp import web
 
-from pydevccu.json_rpc.errors import InvalidParams, ObjectNotFound
+from pydevccu.json_rpc.errors import InvalidParams, ObjectNotFound, SessionExpired
 
 if TYPE_CHECKING:
     from pydevccu.ccu import RPCFunctions
@@ -119,29 +119,44 @@ class JsonRpcHandlers:
     # ─────────────────────────────────────────────────────────────────
 
     async def _handle_session_login(self, params: dict[str, Any]) -> Any:
-        """Handle Session.login."""
+        """
+        Handle Session.login.
+
+        Returns the session_id string directly (not wrapped in a dict).
+        aiohomematic expects: {"result": "session-id", "error": null}
+        """
         username = params.get("username", "")
         password = params.get("password", "")
 
         session_id = self._session.login(username, password)
         if session_id is None:
-            return {"_session_id_": "", "error": "Invalid credentials"}
+            # Return empty string on failed login - aiohomematic checks truthiness
+            return ""
 
-        return {"_session_id_": session_id}
+        return session_id
 
     async def _handle_session_logout(self, params: dict[str, Any]) -> Any:
-        """Handle Session.logout."""
+        """
+        Handle Session.logout.
+
+        aiohomematic expects: {"result": true, "error": null}
+        """
         session_id = params.get("_session_id_", "")
-        success = self._session.logout(session_id)
-        return {"success": success}
+        self._session.logout(session_id)
+        return True
 
     async def _handle_session_renew(self, params: dict[str, Any]) -> Any:
-        """Handle Session.renew."""
+        """
+        Handle Session.renew.
+
+        aiohomematic expects: {"result": true, "error": null} on success.
+        On failure, raise SessionExpired error.
+        """
         session_id = params.get("_session_id_", "")
         new_session_id = self._session.renew(session_id)
         if new_session_id is None:
-            return {"_session_id_": "", "error": "Session expired"}
-        return {"_session_id_": new_session_id}
+            raise SessionExpired
+        return True
 
     # ─────────────────────────────────────────────────────────────────
     # CCU Namespace
