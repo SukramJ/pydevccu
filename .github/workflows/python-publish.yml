@@ -3,22 +3,23 @@ name: "Release: Publish to PyPI"
 
 # yamllint disable-line rule:truthy
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - "*"
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
 
 concurrency:
-  group: python-publish-${{ github.event.release.tag_name }}
+  group: python-publish-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
   release-build:
     if: github.repository_owner == 'SukramJ'
     runs-on: ubuntu-latest
-    name: Build Package (${{ github.event.release.tag_name }})
+    name: Build Package (${{ github.ref_name }})
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -45,10 +46,44 @@ jobs:
           name: release-dists
           path: dist/
 
+  github-release:
+    if: github.repository_owner == 'SukramJ'
+    runs-on: ubuntu-latest
+    name: Create GitHub Release (${{ github.ref_name }})
+    needs: [release-build]
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Extract changelog for version
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF_NAME}"
+          # Extract section between "Version X.Y.Z" and next "Version" line
+          NOTES=$(awk "/^Version ${VERSION//./\\.} /{found=1; next} /^Version /{found=0} found" changelog.txt)
+          # Write to file for multiline support
+          echo "$NOTES" > release_notes.txt
+          echo "Found release notes for version $VERSION"
+
+      - name: Download built distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: release-dists
+          path: dist/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          body_path: release_notes.txt
+          files: dist/*
+
   pypi-publish:
     if: github.repository_owner == 'SukramJ'
     runs-on: ubuntu-latest
-    name: Publish to PyPI (${{ github.event.release.tag_name }})
+    name: Publish to PyPI (${{ github.ref_name }})
     needs: [release-build]
     permissions:
       id-token: write
