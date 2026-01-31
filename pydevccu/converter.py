@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import ast
 import logging
-from typing import Any, Final, cast
+from typing import Any, Final
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -71,8 +71,8 @@ _COMBINED_PARAMETER_TO_PARAMSET_CONVERTER: Final = {
 def convert_combined_parameter_to_paramset(parameter: str, cpv: str) -> dict[str, Any]:
     """Convert combined parameter to paramset."""
     try:
-        if converter := _COMBINED_PARAMETER_TO_PARAMSET_CONVERTER.get(parameter):  # type: ignore[call-overload]
-            return cast(dict[str, Any], converter(cpv))
+        if converter := _COMBINED_PARAMETER_TO_PARAMSET_CONVERTER.get(parameter):
+            return converter(cpv)
         _LOGGER.debug("CONVERT_COMBINED_PARAMETER_TO_PARAMSET: No converter found for %s: %s", parameter, cpv)
     except Exception as ex:
         _LOGGER.debug("CONVERT_COMBINED_PARAMETER_TO_PARAMSET: Convert failed %s", ex.args)

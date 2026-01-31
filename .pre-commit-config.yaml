@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.14.0
+    rev: v0.14.14
     hooks:
       - id: ruff
         args:
@@ -9,7 +9,7 @@ repos:
       - id: ruff-format
         files: ^((pydevccu|tests)/.+)?[^/]+\.py$
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.0
+    rev: v2.4.1
     hooks:
       - id: codespell
         args:
@@ -27,9 +27,6 @@ repos:
           - --format=custom
           - --configfile=tests/bandit.yaml
         files: ^(pydevccu|tests)/.+\.py$
-        exclude: >-
-          ^pydevccu/(ccu|converter|proxy|hm_xml_to_json|
-          hmip_xml_to_json|get_device_data|device_logic/).*\.py$
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
@@ -41,7 +38,7 @@ repos:
         args:
           - --branch=master
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.37.0
+    rev: v1.38.0
     hooks:
       - id: yamllint
   - repo: https://github.com/pre-commit/mirrors-prettier
@@ -59,6 +56,3 @@ repos:
         types_or: [python, pyi]
         require_serial: true
         files: ^pydevccu/.+\.py$
-        exclude: >-
-          ^pydevccu/(ccu|converter|proxy|hm_xml_to_json|
-          hmip_xml_to_json|get_device_data|device_logic/).*\.py$
