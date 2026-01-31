@@ -147,14 +147,7 @@ fixture-parentheses = false
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*.py" = ["D", "TRY002", "S101"]
-# Legacy code - exclude from strict linting
-"pydevccu/ccu.py" = ["ALL"]
-"pydevccu/converter.py" = ["ALL"]
-"pydevccu/proxy.py" = ["ALL"]
-"pydevccu/hm_xml_to_json.py" = ["ALL"]
-"pydevccu/hmip_xml_to_json.py" = ["ALL"]
-"pydevccu/get_device_data.py" = ["ALL"]
-"pydevccu/device_logic/*.py" = ["ALL"]
+
 
 [tool.ruff.lint.isort]
 force-sort-within-sections = true
@@ -174,9 +167,6 @@ omit = [
     "pydevccu/ccu.py",
     "pydevccu/converter.py",
     "pydevccu/proxy.py",
-    "pydevccu/get_device_data.py",
-    "pydevccu/hm_xml_to_json.py",
-    "pydevccu/hmip_xml_to_json.py",
     "pydevccu/device_logic/*",
 ]
 parallel = true
@@ -241,15 +231,3 @@ disallow_untyped_decorators = true
 disallow_untyped_defs = true
 warn_return_any = true
 warn_unreachable = true
-
-[[tool.mypy.overrides]]
-module = [
-    "pydevccu.ccu",
-    "pydevccu.converter",
-    "pydevccu.proxy",
-    "pydevccu.hm_xml_to_json",
-    "pydevccu.hmip_xml_to_json",
-    "pydevccu.get_device_data",
-    "pydevccu.device_logic.*",
-]
-ignore_errors = true

@@ -159,10 +159,14 @@ class VirtualCCU:
                 setup_default_state(self._state_manager)
 
             # Start XML-RPC server (runs in thread)
+            # In CCU/OpenCCU mode, return real CCU version string
+            # In Homegear mode, return pydevccu version (default)
+            ccu_version = "3.87.1.20250130" if self._mode in (BackendMode.CCU, BackendMode.OPENCCU) else None
             self._xml_rpc_server = XmlRpcServer(
                 addr=(self._host, self._xml_rpc_port),
                 devices=self._devices,
                 persistence=self._persistence,
+                version=ccu_version,
             )
             self._xml_rpc_server.start()
 

@@ -1,15 +1,23 @@
-Version 0.2.0 (2026-01-30)
-- Add VirtualCCU orchestrator for complete CCU/OpenCCU simulation
-- Add JSON-RPC server with CCU-compatible API (/api/homematic.cgi)
+Version 0.2.0 (2026-01-31)
 - Add BackendMode enum (HOMEGEAR, CCU, OPENCCU)
-- Add StateManager for unified state management
-- Add SessionManager for JSON-RPC authentication
-- Add ReGa script engine with pattern matching for aiohomematic scripts
-- Add Program, SystemVariable, Room, and Function management
 - Add Backup and Firmware update simulation
+- Add English documentation (DOCUMENTATION.md)
 - Add HTTP endpoints for backup download and maintenance
+- Add JSON-RPC server with CCU-compatible API (/api/homematic.cgi)
+- Add Program, SystemVariable, Room, and Function management
+- Add RPCError exception class for XML-RPC error handling
+- Add ReGa script engine with pattern matching for aiohomematic scripts
+- Add SessionManager for JSON-RPC authentication
+- Add StateManager for unified state management
+- Add VirtualCCU orchestrator for complete CCU/OpenCCU simulation
 - Add aiohttp as new dependency
+- Add complete type annotations for ccu.py (mypy strict)
 - Add comprehensive test suite
+- Add device-specific response mappings for realistic event simulation
+- Fix aiohomematic compatibility (ReGa script responses, system variables)
+- Fix protected-access violations with LockingServerProxy.uri property
+- Improve code quality (ruff, mypy, pylint compliance)
+- Refactor legacy code to remove linter disables
 
 Version 0.1.21 (2026-01-23)
 - Add compatibility layer for free-threading support

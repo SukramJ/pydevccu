@@ -1,40 +1,34 @@
-"""
-ServerProxy implementation with lock when request is executing
-"""
+"""ServerProxy implementation with lock when request is executing."""
 
 from __future__ import annotations
 
 import threading
+from typing import Any
 import xmlrpc.client
 
 
 # pylint: disable=too-few-public-methods
 class LockingServerProxy(xmlrpc.client.ServerProxy):
-    """
-    ServerProxy implementation with lock when request is executing
-    """
+    """ServerProxy implementation with lock when request is executing."""
 
-    def __init__(self, *args, **kwargs):
-        """
-        Initialize new proxy for server and get local ip
-        """
+    def __init__(self, uri: str, *args: Any, **kwargs: Any) -> None:
+        """Initialize new proxy for server and get local ip."""
         self.lock = threading.Lock()
-        xmlrpc.client.ServerProxy.__init__(self, *args, **kwargs)
+        self._uri = uri
+        xmlrpc.client.ServerProxy.__init__(self, uri, *args, **kwargs)
 
-    def __request(self, *args, **kwargs):
-        """
-        Call method on server side
-        """
+    @property
+    def uri(self) -> str:
+        """Return the server URI."""
+        return self._uri
 
+    def __request(self, *args: Any, **kwargs: Any) -> Any:
+        """Call method on server side."""
         with self.lock:
             parent = xmlrpc.client.ServerProxy
-            # pylint: disable=protected-access
-            return parent._ServerProxy__request(self, *args, **kwargs)
+            # Access parent's private method via name mangling
+            return parent._ServerProxy__request(self, *args, **kwargs)  # type: ignore[attr-defined]
 
-    # pylint: disable=arguments-differ
-    def __getattr__(self, *args, **kwargs):
-        """
-        Magic method dispatcher
-        """
-
+    def __getattr__(self, *args: Any, **kwargs: Any) -> Any:
+        """Magic method dispatcher."""
         return xmlrpc.client._Method(self.__request, *args, **kwargs)
