@@ -577,6 +577,12 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
     )
 
 
+class ReusableXMLRPCServer(SimpleXMLRPCServer):
+    """XML-RPC server with SO_REUSEADDR enabled for immediate port reuse."""
+
+    allow_reuse_address = True
+
+
 class ServerThread(threading.Thread):
     """XML-RPC server thread to handle messages from CCU / Homegear."""
 
@@ -594,7 +600,7 @@ class ServerThread(threading.Thread):
         LOG.debug("__init__: Registering RPC methods")
         self._rpcfunctions = RPCFunctions(devices, persistence, logic, version=version)
         LOG.debug("ServerThread.__init__: Setting up server")
-        self.server = SimpleXMLRPCServer(addr, requestHandler=RequestHandler, logRequests=True, allow_none=True)
+        self.server = ReusableXMLRPCServer(addr, requestHandler=RequestHandler, logRequests=True, allow_none=True)
         self.server.register_introspection_functions()
         self.server.register_multicall_functions()
         LOG.debug("ServerThread.__init__: Registering RPC functions")
