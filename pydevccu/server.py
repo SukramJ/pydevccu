@@ -7,8 +7,8 @@ a complete CCU/OpenCCU simulation for testing.
 
 from __future__ import annotations
 
+import asyncio
 import logging
-import threading
 from typing import TYPE_CHECKING, Any, Final
 
 from pydevccu.ccu import ServerThread as XmlRpcServer
@@ -108,7 +108,7 @@ class VirtualCCU:
 
         # Runtime state
         self._running = False
-        self._lock = threading.RLock()
+        self._lock = asyncio.Lock()
 
     @property
     def state_manager(self) -> StateManager:
@@ -147,7 +147,7 @@ class VirtualCCU:
 
     async def start(self) -> None:
         """Start all servers."""
-        with self._lock:
+        async with self._lock:
             if self._running:
                 LOG.warning("VirtualCCU already running")
                 return
@@ -203,29 +203,46 @@ class VirtualCCU:
 
     async def stop(self) -> None:
         """Stop all servers."""
-        with self._lock:
+        if not self._running:
+            return
+
+        async with self._lock:
+            # Double-check after acquiring lock
             if not self._running:
                 return
 
             LOG.info("Stopping VirtualCCU")
 
-            # Stop JSON-RPC server
-            if self._json_rpc_server:
-                await self._json_rpc_server.stop()
-                self._json_rpc_server = None
+            try:
+                # Stop JSON-RPC server with timeout
+                if self._json_rpc_server:
+                    try:
+                        await asyncio.wait_for(self._json_rpc_server.stop(), timeout=5.0)
+                    except asyncio.TimeoutError:
+                        LOG.warning("JSON-RPC server stop timed out after 5 seconds")
+                    except Exception as e:
+                        LOG.error("Error stopping JSON-RPC server: %s", e)
+                    finally:
+                        self._json_rpc_server = None
 
-            # Stop XML-RPC server
-            if self._xml_rpc_server:
-                # Clear remotes before stopping to prevent callback errors
-                self._xml_rpc_server._rpcfunctions.remotes.clear()
-                self._xml_rpc_server.stop()
-                self._xml_rpc_server = None
+                # Stop XML-RPC server
+                if self._xml_rpc_server:
+                    try:
+                        # Clear remotes before stopping to prevent callback errors
+                        self._xml_rpc_server._rpcfunctions.remotes.clear()
+                        self._xml_rpc_server.stop()
+                    except Exception as e:
+                        LOG.error("Error stopping XML-RPC server: %s", e)
+                    finally:
+                        self._xml_rpc_server = None
 
-            self._handlers = None
-            self._rega_engine = None
-            self._running = False
-
-            LOG.info("VirtualCCU stopped")
+                self._handlers = None
+                self._rega_engine = None
+            except Exception as e:
+                LOG.exception("Unexpected error during VirtualCCU shutdown: %s", e)
+            finally:
+                self._running = False
+                LOG.info("VirtualCCU stopped")
 
     async def __aenter__(self) -> VirtualCCU:
         """Async context manager entry."""
