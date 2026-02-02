@@ -203,11 +203,7 @@ class VirtualCCU:
 
     async def stop(self) -> None:
         """Stop all servers."""
-        if not self._running:
-            return
-
         async with self._lock:
-            # Double-check after acquiring lock
             if not self._running:
                 return
 
@@ -218,10 +214,10 @@ class VirtualCCU:
                 if self._json_rpc_server:
                     try:
                         await asyncio.wait_for(self._json_rpc_server.stop(), timeout=5.0)
-                    except asyncio.TimeoutError:
+                    except TimeoutError:
                         LOG.warning("JSON-RPC server stop timed out after 5 seconds")
-                    except Exception as e:
-                        LOG.error("Error stopping JSON-RPC server: %s", e)
+                    except Exception:
+                        LOG.exception("Error stopping JSON-RPC server")
                     finally:
                         self._json_rpc_server = None
 
@@ -231,15 +227,15 @@ class VirtualCCU:
                         # Clear remotes before stopping to prevent callback errors
                         self._xml_rpc_server._rpcfunctions.remotes.clear()
                         self._xml_rpc_server.stop()
-                    except Exception as e:
-                        LOG.error("Error stopping XML-RPC server: %s", e)
+                    except Exception:
+                        LOG.exception("Error stopping XML-RPC server")
                     finally:
                         self._xml_rpc_server = None
 
                 self._handlers = None
                 self._rega_engine = None
-            except Exception as e:
-                LOG.exception("Unexpected error during VirtualCCU shutdown: %s", e)
+            except Exception:
+                LOG.exception("Unexpected error during VirtualCCU shutdown")
             finally:
                 self._running = False
                 LOG.info("VirtualCCU stopped")

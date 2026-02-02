@@ -62,7 +62,8 @@ jobs:
         run: |
           VERSION="${GITHUB_REF_NAME}"
           # Extract section between "Version X.Y.Z" and next "Version" line
-          NOTES=$(awk "/^Version ${VERSION//./\\.} /{found=1; next} /^Version /{found=0} found" changelog.txt)
+          NOTES=$(awk "/^Version ${VERSION//./\\.} /{found=1; next} \
+            /^Version /{found=0} found" changelog.txt)
           # Write to file for multiline support
           echo "$NOTES" > release_notes.txt
           echo "Found release notes for version $VERSION"
