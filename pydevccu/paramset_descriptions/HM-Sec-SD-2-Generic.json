@@ -3,7 +3,7 @@
     "MASTER": {
       "DEV_RPT_CNT_MAX": {
         "TYPE": "INTEGER",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 0,
         "MAX": 1,

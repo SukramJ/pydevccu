@@ -3,7 +3,7 @@
     "MASTER": {
       "SIGNAL": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": true,
         "MAX": true,
@@ -13,7 +13,7 @@
       },
       "SIGNAL_TONE": {
         "TYPE": "ENUM",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 0,
         "MAX": 3,
@@ -29,7 +29,7 @@
       },
       "KEYPRESS_SIGNAL": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": true,
         "MAX": true,

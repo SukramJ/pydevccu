@@ -3,7 +3,7 @@
     "MASTER": {
       "DEVICE_LED_MODE": {
         "TYPE": "ENUM",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 0,
         "MAX": 1,
@@ -17,7 +17,7 @@
       },
       "TRANSMIT_DEV_TRY_MAX": {
         "TYPE": "INTEGER",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 6,
         "MAX": 10.0,
@@ -27,7 +27,7 @@
       },
       "LOCAL_RESET_DISABLE": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,

@@ -3,7 +3,7 @@
     "MASTER": {
       "BURST_RX": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,
@@ -13,7 +13,7 @@
       },
       "PARAM_SELECT": {
         "TYPE": "ENUM",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 3,
         "MAX": 4,
@@ -30,7 +30,7 @@
       },
       "CYCLIC_INFO_MSG_DIS": {
         "TYPE": "INTEGER",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 0,
         "MAX": 255,
@@ -40,7 +40,7 @@
       },
       "LOCAL_RESET_DISABLE": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,
@@ -146,7 +146,7 @@
         "DEFAULT": 0.0,
         "MAX": 150.0,
         "MIN": -150.0,
-        "UNIT": "\u00b0C",
+        "UNIT": "°C",
         "TAB_ORDER": 0
       },
       "LOWBAT": {
@@ -172,7 +172,7 @@
         "DEFAULT": 0.0,
         "MAX": 150.0,
         "MIN": -150.0,
-        "UNIT": "\u00b0C",
+        "UNIT": "°C",
         "TAB_ORDER": 0
       },
       "LOWBAT": {
@@ -198,7 +198,7 @@
         "DEFAULT": 0.0,
         "MAX": 150.0,
         "MIN": -150.0,
-        "UNIT": "\u00b0C",
+        "UNIT": "°C",
         "TAB_ORDER": 0
       },
       "LOWBAT": {
@@ -224,7 +224,7 @@
         "DEFAULT": 0.0,
         "MAX": 150.0,
         "MIN": -150.0,
-        "UNIT": "\u00b0C",
+        "UNIT": "°C",
         "TAB_ORDER": 0
       },
       "LOWBAT": {
@@ -250,7 +250,7 @@
         "DEFAULT": 0.0,
         "MAX": 150.0,
         "MIN": -150.0,
-        "UNIT": "\u00b0C",
+        "UNIT": "°C",
         "TAB_ORDER": 0
       },
       "LOWBAT": {

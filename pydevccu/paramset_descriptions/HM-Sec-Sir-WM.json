@@ -3,7 +3,7 @@
     "MASTER": {
       "CYCLIC_INFO_MSG": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": true,
         "MAX": true,
@@ -13,7 +13,7 @@
       },
       "SABOTAGE_MSG": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": true,
         "MAX": true,
@@ -23,7 +23,7 @@
       },
       "SIGNAL_TONE": {
         "TYPE": "ENUM",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 0,
         "MAX": 3,
@@ -39,7 +39,7 @@
       },
       "LOWBAT_SIGNAL": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": true,
         "MAX": true,
@@ -49,7 +49,7 @@
       },
       "LOW_BAT_LIMIT": {
         "TYPE": "FLOAT",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 2.3,
         "MAX": 2.6,
@@ -62,7 +62,7 @@
       },
       "LOCAL_RESET_DISABLE": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,
@@ -72,7 +72,7 @@
       },
       "ALARMTIME_MAX": {
         "TYPE": "FLOAT",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 180.0,
         "MAX": 900.0,

@@ -3,7 +3,7 @@
     "MASTER": {
       "LIVE_MODE_RX": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,
@@ -119,7 +119,7 @@
         "DEFAULT": 0.0,
         "MAX": 80.0,
         "MIN": -40.0,
-        "UNIT": "\u00b0C",
+        "UNIT": "°C",
         "TAB_ORDER": 0
       },
       "HUMIDITY": {

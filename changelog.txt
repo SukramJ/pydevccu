@@ -1,9 +1,11 @@
-Version 0.2.1 (2026-02-02)
+Version 0.2.2 (2026-03-19)
 - Fix RuntimeError in VirtualCCU.stop() by replacing threading.RLock with asyncio.Lock
 - Fix "Address already in use" errors by enabling SO_REUSEADDR on XML-RPC server
 - Add timeout (5s) to JSON-RPC server stop to prevent hanging during shutdown
 - Improve error handling in VirtualCCU.stop() with proper exception catching
 - Ensure server cleanup completes even if individual stop operations fail
+- Fix session handling
+- Update paramset descriptions for HomeMatic classic devices
 
 Version 0.2.0 (2026-01-31)
 - Add BackendMode enum (HOMEGEAR, CCU, OPENCCU)

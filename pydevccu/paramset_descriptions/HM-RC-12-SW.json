@@ -3,7 +3,7 @@
     "MASTER": {
       "BACKLIGHT_ON_TIME": {
         "TYPE": "FLOAT",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 5.0,
         "MAX": 255.0,
@@ -13,7 +13,7 @@
       },
       "BACKLIGHT_AT_KEYSTROKE": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": true,
         "MAX": true,
@@ -23,7 +23,7 @@
       },
       "BACKLIGHT_AT_MOTION": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": true,
         "MAX": true,
