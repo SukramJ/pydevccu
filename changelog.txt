@@ -1,3 +1,7 @@
+Version 0.2.2 (2026-03-19)
+- Fix session handling
+- Update paramset descriptions for HomeMatic classic devices
+
 Version 0.2.1 (2026-02-02)
 - Fix RuntimeError in VirtualCCU.stop() by replacing threading.RLock with asyncio.Lock
 - Fix "Address already in use" errors by enabling SO_REUSEADDR on XML-RPC server

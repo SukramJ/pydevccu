@@ -3,7 +3,7 @@
     "MASTER": {
       "CENTRAL_ADDRESS": {
         "TYPE": "INTEGER",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 0,
         "MAX": 2147483647,

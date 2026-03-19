@@ -3,7 +3,7 @@
     "MASTER": {
       "STANDBY_TIME": {
         "TYPE": "INTEGER",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 5,
         "MAX": 99,

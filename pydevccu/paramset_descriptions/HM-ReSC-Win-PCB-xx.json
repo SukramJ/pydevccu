@@ -3,7 +3,7 @@
     "MASTER": {
       "CYCLIC_INFO_MSG": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": true,
         "MAX": true,
@@ -13,7 +13,7 @@
       },
       "CYCLIC_INFO_MSG_DIS": {
         "TYPE": "INTEGER",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 0,
         "MAX": 255,
@@ -23,7 +23,7 @@
       },
       "LOCAL_RESET_DISABLE": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,
@@ -33,7 +33,7 @@
       },
       "RS485_IDLE_TIME": {
         "TYPE": "INTEGER",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 10,
         "MAX": 255,

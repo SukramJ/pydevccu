@@ -3,7 +3,7 @@
     "MASTER": {
       "CYCLIC_INFO_MSG": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,
@@ -13,7 +13,7 @@
       },
       "SABOTAGE_MSG": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": true,
         "MAX": true,
@@ -23,7 +23,7 @@
       },
       "TRANSMIT_DEV_TRY_MAX": {
         "TYPE": "INTEGER",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 6,
         "MAX": 10.0,

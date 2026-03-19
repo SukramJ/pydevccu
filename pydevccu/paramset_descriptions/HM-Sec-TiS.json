@@ -3,7 +3,7 @@
     "MASTER": {
       "CYCLIC_INFO_MSG": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,

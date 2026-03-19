@@ -3,7 +3,7 @@
     "MASTER": {
       "SABOTAGE_MSG": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": true,
         "MAX": true,

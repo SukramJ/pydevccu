@@ -116,7 +116,11 @@ class TestHandlersSession:
 
     @pytest.mark.asyncio
     async def test_session_login(self, json_rpc_handlers: JsonRpcHandlers) -> None:
-        """Test Session.login handler."""
+        """Test Session.login handler.
+
+        aiohomematic expects the session_id string directly in the result field,
+        not wrapped in a dict.
+        """
         result = await json_rpc_handlers._handle_session_login(
             {
                 "username": "Admin",
@@ -124,12 +128,16 @@ class TestHandlersSession:
             }
         )
 
-        assert "_session_id_" in result
-        assert len(result["_session_id_"]) == 32
+        # Result is the session_id string directly
+        assert isinstance(result, str)
+        assert len(result) == 32
 
     @pytest.mark.asyncio
     async def test_session_login_invalid(self, json_rpc_handlers: JsonRpcHandlers) -> None:
-        """Test Session.login with invalid credentials."""
+        """Test Session.login with invalid credentials.
+
+        aiohomematic checks truthiness of the result, so empty string means failure.
+        """
         result = await json_rpc_handlers._handle_session_login(
             {
                 "username": "Admin",
@@ -137,29 +145,33 @@ class TestHandlersSession:
             }
         )
 
-        assert result["_session_id_"] == ""
-        assert "error" in result
+        # Empty string on failed login
+        assert result == ""
 
     @pytest.mark.asyncio
     async def test_session_logout(self, json_rpc_handlers: JsonRpcHandlers) -> None:
-        """Test Session.logout handler."""
-        # First login
-        login_result = await json_rpc_handlers._handle_session_login(
+        """Test Session.logout handler.
+
+        aiohomematic expects True on successful logout.
+        """
+        # First login - result is the session_id string directly
+        session_id = await json_rpc_handlers._handle_session_login(
             {
                 "username": "Admin",
                 "password": "test123",
             }
         )
-        session_id = login_result["_session_id_"]
+        assert isinstance(session_id, str)
+        assert len(session_id) == 32
 
-        # Then logout
+        # Then logout - returns True on success
         result = await json_rpc_handlers._handle_session_logout(
             {
                 "_session_id_": session_id,
             }
         )
 
-        assert result["success"] is True
+        assert result is True
 
 
 class TestHandlersCCU:

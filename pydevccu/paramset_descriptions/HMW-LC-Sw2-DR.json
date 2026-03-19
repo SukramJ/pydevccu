@@ -3,7 +3,7 @@
     "MASTER": {
       "LOGGING_TIME": {
         "TYPE": "FLOAT",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 2.0,
         "MAX": 25.5,
@@ -13,7 +13,7 @@
       },
       "CENTRAL_ADDRESS": {
         "TYPE": "INTEGER",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 0,
         "MAX": 2147483647,
@@ -23,7 +23,7 @@
       },
       "DIRECT_LINK_DEACTIVATE": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,

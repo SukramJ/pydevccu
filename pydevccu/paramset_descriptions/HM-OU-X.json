@@ -3,7 +3,7 @@
     "MASTER": {
       "DISPLAY_ENERGYOPTIONS": {
         "TYPE": "FLOAT",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 255.0,
         "MAX": 255.0,
@@ -13,7 +13,7 @@
       },
       "DISPLAY_BRIGHTNESS": {
         "TYPE": "ENUM",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 15,
         "MAX": 15,

@@ -3,7 +3,7 @@
     "MASTER": {
       "LOCAL_RESET_DISABLE": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,
@@ -13,7 +13,7 @@
       },
       "POWER_SUPPLY": {
         "TYPE": "ENUM",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 1,
         "MAX": 1,
@@ -27,7 +27,7 @@
       },
       "WAKEUP_BEHAVIOUR_STATUS_SIGNALIZATION_CONFIRMATION": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,
@@ -37,7 +37,7 @@
       },
       "WAKEUP_BEHAVIOUR_STATUS_MSG_CONFIRMATION": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,
@@ -47,7 +47,7 @@
       },
       "DISPLAY_INVERTING": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,

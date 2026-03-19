@@ -3,7 +3,7 @@
     "MASTER": {
       "INTERNAL_KEYS_VISIBLE": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 3,
         "DEFAULT": true,
         "MAX": true,
@@ -13,7 +13,7 @@
       },
       "CONF_BUTTON_TIME": {
         "TYPE": "INTEGER",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 5,
         "MAX": 254,
@@ -110,7 +110,7 @@
         "DEFAULT": 75,
         "MAX": 100,
         "MIN": 30,
-        "UNIT": "\u00b0C",
+        "UNIT": "°C",
         "TAB_ORDER": 0
       },
       "REDUCE_LEVEL": {
@@ -130,7 +130,7 @@
         "DEFAULT": 80,
         "MAX": 100,
         "MIN": 30,
-        "UNIT": "\u00b0C",
+        "UNIT": "°C",
         "TAB_ORDER": 0
       },
       "FUSE_DELAY": {

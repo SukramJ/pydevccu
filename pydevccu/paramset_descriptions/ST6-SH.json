@@ -3,7 +3,7 @@
     "MASTER": {
       "TRANSMIT_DEV_TRY_MAX": {
         "TYPE": "INTEGER",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": 5,
         "MAX": 10.0,
@@ -13,7 +13,7 @@
       },
       "LOCAL_RESET_DISABLE": {
         "TYPE": "BOOL",
-        "OPERATIONS": 0,
+        "OPERATIONS": 3,
         "FLAGS": 1,
         "DEFAULT": false,
         "MAX": true,
