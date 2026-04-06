@@ -1,3 +1,6 @@
+Version 0.2.3 (2026-04-06)
+- Add HmIP-DLP
+
 Version 0.2.2 (2026-03-19)
 - Fix session handling
 - Update paramset descriptions for HomeMatic classic devices
