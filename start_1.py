@@ -10,7 +10,7 @@ import pydevccu
 # s = pydevccu.Server(devices=['HM-Sec-WDS'], persistence=True, logic={"startupdelay": 5, "interval": 30})
 
 s = pydevccu.Server(
-    devices=["HmIP-RGBW", "HM-TC-IT-WM-W-EU", "HBW-LC-RGBWW-IN6-DR"],
+    devices=["HmIP-RGBW", "HmIP-BWTH", "HmIP-DLD", "HmIP-DLP", "HmIP-BSM", "HmIP-BDT", "HmIP-UDI-SMI55"],
     persistence=True,
     logic={"startupdelay": 5, "interval": 30},
 )
