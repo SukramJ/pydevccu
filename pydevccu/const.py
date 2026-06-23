@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from enum import Enum, auto
 
-VERSION = "0.2.0"
+VERSION = "0.2.5"
 
 
 class BackendMode(Enum):
