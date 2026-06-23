@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name        = "pydevccu"
-version     = "0.2.4"
+dynamic     = ["version"]
 license     = {text = "MIT License"}
 description = "Virtual HomeMatic CCU XML-RPC and JSON-RPC backend."
 readme      = "README.md"
@@ -46,6 +46,9 @@ test = [
 
 [tool.setuptools]
 include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {attr = "pydevccu.const.VERSION"}
 
 [tool.setuptools.packages.find]
 include = ["pydevccu*"]

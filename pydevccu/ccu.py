@@ -32,9 +32,6 @@ from pydevccu.device_responses import compute_response_events
 from . import compat, const, device_logic
 from .proxy import LockingServerProxy
 
-# Package version - used for Homegear mode version string
-PYDEVCCU_VERSION = "0.2.0"
-
 
 class LogicDevice(Protocol):
     """Define interface for device logic simulation classes."""
@@ -115,7 +112,7 @@ class RPCFunctions:
         """
         LOG.debug("RPCFunctions.__init__")
         self.remotes: dict[str, LockingServerProxy] = {}
-        self._version = version or f"pydevccu-{PYDEVCCU_VERSION}"
+        self._version = version or f"pydevccu-{const.VERSION}"
         try:
             self.active: bool = False
             self.known_devices: list[dict[str, Any]] = []

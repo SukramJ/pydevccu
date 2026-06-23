@@ -1,3 +1,6 @@
+Version 0.2.5 (2026-06-23)
+- Update HmIP-FWI
+
 Version 0.2.4 (2026-04-20)
 - Add HmIP-UDI-SMI55
 
