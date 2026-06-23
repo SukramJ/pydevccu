@@ -75,7 +75,8 @@ jobs:
           path: dist/
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        # yamllint disable-line rule:line-length
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65  # v2
         with:
           name: ${{ github.ref_name }}
           body_path: release_notes.txt
@@ -99,6 +100,7 @@ jobs:
           path: dist/
 
       - name: Publish to PyPI (Trusted Publishing)
-        uses: pypa/gh-action-pypi-publish@release/v1
+        # yamllint disable-line rule:line-length
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # release/v1
         with:
           packages-dir: dist/
