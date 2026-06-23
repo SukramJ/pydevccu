@@ -36,7 +36,7 @@ repos:
         exclude: (.vscode|.devcontainer)
       - id: no-commit-to-branch
         args:
-          - --branch=master
+          - --branch=main
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.38.0
     hooks:

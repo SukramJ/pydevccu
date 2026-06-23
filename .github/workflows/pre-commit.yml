@@ -5,10 +5,10 @@ name: Pre-commit checks
 on:
   pull_request:
     branches:
-      - master
+      - main
   push:
     branches-ignore:
-      - master
+      - main
     tags-ignore:
       - "**"
 
