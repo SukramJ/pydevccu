@@ -4,7 +4,7 @@
 coverage==7.14.3
 mypy==2.1.0
 pip==26.1.2
-prek==0.4.5
+prek==0.4.6
 pytest-asyncio==1.4.0
 pytest-cov==7.1.0
 pytest==9.1.1
