@@ -1,10 +1,10 @@
 -r requirements.txt
 -r requirements_test_pre_commit.txt
 
-coverage==7.15.0
-mypy==2.2.0
+coverage==7.15.2
+mypy==2.3.0
 pip==26.1.2
-prek==0.4.8
+prek==0.4.9
 pytest-asyncio==1.4.0
 pytest-cov==7.1.0
 pytest==9.1.1
