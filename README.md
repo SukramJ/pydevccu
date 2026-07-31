@@ -476,6 +476,10 @@ s = pydevccu.Server(
 
 For more information about the XML-RPC methods refer to the official [HomeMatic XML-RPC API](https://www.eq-3.de/Downloads/eq3/download%20bereich/hm_web_ui_doku/HM_XmlRpc_API.pdf) (German).
 
+## Contributing
+
+Contributions are welcome, including AI-assisted ones — see the [AI Contribution Policy](AI_POLICY.md) for the rules that apply.
+
 ## License
 
 MIT
