@@ -1,0 +1,31 @@
+!# name: get_program_descriptions.fn
+!#
+!# Erstellt in Ergänzung zu https://github.com/eq-3/occu/blob/45b38865f6b60f16f825b75f0bdc8a9738831ee0/WebUI/www/api/methods/sysvar/getall.tcl
+!# Erweitert das Script um "description"
+!#
+
+string id;
+boolean dpFirst = true;
+Write("[");
+foreach(id, dom.GetObject(ID_PROGRAMS).EnumIDs()) {
+  object prg = dom.GetObject(id);
+    string description = "";
+    if (prg) {
+      ! use UriEncode() to ensure special characters " and \
+      ! and others are properly encoded using URI/URL percentage
+      ! encoding
+      description = prg.PrgInfo().UriEncode();
+
+      if (dpFirst) {
+        dpFirst = false;
+      } else {
+        WriteLine(',');
+      }
+
+      Write("{");
+      Write("\"id\": \"" # id # "\",");
+      Write("\"description\": \"" # description # "\"");
+      Write("}");
+    }
+}
+Write("]");

@@ -268,18 +268,44 @@ class RPCFunctions:
         )
 
     def _fire_event(self, interface_id: str, address: str, value_key: str, value: Any) -> None:
+        self._dispatch_event(None, interface_id, address, value_key, value)
+
+    def _fire_event_to(self, target: str, interface_id: str, address: str, value_key: str, value: Any) -> None:
+        """Deliver an event to a single remote, the way a CCU answers a ping."""
+        self._dispatch_event(target, interface_id, address, value_key, value)
+
+    def _dispatch_event(self, target: str | None, interface_id: str, address: str, value_key: str, value: Any) -> None:
+        """
+        Notify the in-process callbacks and every registered remote.
+
+        When target is set only that remote is called.
+
+        A client that answers with a Fault is *answering* — it stays
+        registered and delivery continues to the remaining remotes.
+        Only a transport error means the client is gone.
+        """
         address = address.upper()
         LOG.debug("RPCFunctions._fire_event: %s, %s, %s, %s", interface_id, address, value_key, value)
         for callback in self.paramset_callbacks:
             callback(interface_id, address, value_key, value)
         delete_clients: list[str] = []
         for pinterface_id, proxy in self.remotes.items():
+            if target is not None and pinterface_id != target:
+                continue
             try:
                 proxy.event(pinterface_id, address, value_key, value)
             except (ConnectionError, TimeoutError, OSError):
                 delete_clients.append(pinterface_id)
+            except Exception:
+                # An application-level fault must not abort delivery to
+                # the remaining clients, and must not unregister the one
+                # that raised it.
+                LOG.debug(
+                    "RPCFunctions._fire_event: callback failed for %s, keeping it registered",
+                    pinterface_id,
+                )
         for client in delete_clients:
-            LOG.exception("RPCFunctions._fire_event: Exception. Deleting client: %s", client)
+            LOG.warning("RPCFunctions._fire_event: transport error. Deleting client: %s", client)
             del self.remotes[client]
 
     def listDevices(self, interface_id: str | None = None) -> list[dict[str, Any]]:
@@ -291,9 +317,32 @@ class RPCFunctions:
         return [["VCU0000001:1", const.ATTR_ERROR, 7]]
 
     def ping(self, caller_id: str | None = None) -> bool:
-        """Handle ping request from client."""
+        """
+        Handle ping request from client.
+
+        A real CCU answers True and then delivers a CENTRAL/PONG event
+        carrying the caller id back to the registered client — that
+        event is how a client matches its own ping and keeps its
+        connection state healthy. Without it aiohomematic reports a
+        permanent PING_PONG_MISMATCH.
+
+        The caller id has the shape "<interface_id>#<token>"; the event
+        goes to the remote that owns the interface, or to all remotes
+        when the id carries no routable prefix.
+        """
         LOG.debug("RPCFunctions.ping: caller_id=%s", caller_id)
+        self._fire_pong(caller_id)
         return True
+
+    def _fire_pong(self, caller_id: str | None) -> None:
+        """Deliver the PONG event answering a ping."""
+        if not caller_id:
+            return
+        target = caller_id.split("#", 1)[0]
+        if target in self.remotes:
+            self._fire_event_to(target, target, const.CENTRAL_ADDRESS, const.ATTR_PONG, caller_id)
+            return
+        self._fire_event(target, const.CENTRAL_ADDRESS, const.ATTR_PONG, caller_id)
 
     def getAllSystemVariables(self) -> dict[str, Any]:
         LOG.debug("RPCFunctions.getAllSystemVariables")

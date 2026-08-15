@@ -43,8 +43,11 @@ class TestRegaSerial:
         result = rega_engine.execute(script)
 
         assert result.success is True
-        # Output is JSON-encoded string (e.g., '"DEVCCU0001"')
-        serial = json.loads(result.output)
+        # get_serial.fn writes {"serial": "..."} — an object, not a
+        # bare string.
+        data = json.loads(result.output)
+        assert isinstance(data, dict)
+        serial = data["serial"]
         assert isinstance(serial, str)
         assert len(serial) <= 10
 
@@ -203,8 +206,11 @@ class TestRegaUpdate:
 
         assert result.success is True
         data = json.loads(result.output)
-        assert "currentFirmware" in data
-        assert "updateAvailable" in data
+        # get_system_update_info.fn writes snake_case keys.
+        assert "current_firmware" in data
+        assert "available_firmware" in data
+        assert "update_available" in data
+        assert "check_script_available" in data
 
     def test_trigger_update(self, rega_engine: RegaEngine, state_manager: StateManager) -> None:
         """Test trigger update pattern."""

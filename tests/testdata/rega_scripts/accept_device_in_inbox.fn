@@ -1,0 +1,51 @@
+!# name: accept_device_in_inbox.fn
+!# param: "##device_address##"
+!#
+!# Accept a device from the CCU inbox by setting ReadyConfig to true.
+!# The device address is passed as parameter.
+!#
+!# Params for session recorder
+!#
+
+string sDeviceAddress = "##device_address##";
+boolean bSuccess = false;
+boolean bFound = false;
+string sError = "";
+
+!# Find device by iterating through ID_DEVICES and matching address
+object oDevices = dom.GetObject(ID_DEVICES);
+if (oDevices) {
+    string sDevId;
+    foreach(sDevId, oDevices.EnumIDs()) {
+        object oDev = dom.GetObject(sDevId);
+        if (oDev) {
+            if (oDev.Address() == sDeviceAddress) {
+                bFound = true;
+                if (!oDev.ReadyConfig()) {
+                    oDev.ReadyConfig(true);
+                    bSuccess = oDev.ReadyConfig();
+                    if (!bSuccess) {
+                        sError = "Failed to set ReadyConfig";
+                    }
+                } else {
+                    sError = "Device already accepted";
+                    bSuccess = true;
+                }
+            }
+        }
+    }
+}
+
+if (!bFound) {
+    sError = "Device not found";
+}
+
+Write('{"success":');
+if (bSuccess) {
+    Write('true');
+} else {
+    Write('false');
+}
+Write(',"error":"');
+Write(sError);
+Write('"}');
