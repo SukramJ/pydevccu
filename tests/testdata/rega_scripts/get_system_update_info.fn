@@ -1,0 +1,39 @@
+!# name: get_system_update_info.fn
+!#
+!# This script checks if a firmware update is available.
+!# Only supported on OpenCCU (uses checkFirmwareUpdate.sh).
+!#
+
+string sFwCurrent = "";
+string sFwAvailable = "";
+string sResult = "";
+boolean bUpdateAvailable = false;
+boolean bCheckScriptAvailable = false;
+integer iPos;
+integer iExitCode;
+
+!# Get current firmware version from /VERSION file
+system.Exec("grep VERSION= /VERSION | tr -d '[:space:]' | cut -d= -f2", &sFwCurrent);
+sFwCurrent = sFwCurrent.Trim();
+
+!# Check if checkFirmwareUpdate.sh is available and working
+system.Exec("/bin/checkFirmwareUpdate.sh 2>/dev/null; echo \"EXIT_CODE=$?\"", &sResult);
+sResult = sResult.Trim();
+iPos = sResult.Find("EXIT_CODE=");
+iExitCode = (sResult.Substr(iPos + 10, sResult.Length())).ToInteger();
+
+!# Check Exit codes: 0 = no update, 1 = update available, > 4 = error or script not available
+if (iExitCode < 5) {
+  bCheckScriptAvailable = true;
+  if (iExitCode == 1) {
+    bUpdateAvailable = true;
+    sResult = sResult.Replace("\n\n",";");
+    sResult = sResult.StrValueByIndex(";",1);
+    sResult = sResult.Replace(" ",";");
+    sFwAvailable = sResult.StrValueByIndex(";",3);
+  }
+}
+Write('{"current_firmware":"'# sFwCurrent #'",');
+Write('"available_firmware":"'# sFwAvailable #'",');
+Write('"update_available":'# bUpdateAvailable #',');
+Write('"check_script_available":'# bCheckScriptAvailable #'}');

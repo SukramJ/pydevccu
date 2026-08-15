@@ -1,3 +1,19 @@
+Version 0.2.6 (2026-08-15)
+- Dispatch ReGa scripts by their "!# name:" header; generic content patterns shadowed six scripts
+- Fix set_program_state.fn and set_system_variable.fn silently changing nothing
+- Fix accept_device_in_inbox.fn and acknowledge_message.fn returning a listing instead of {"success":...}
+- Fix create_backup_status.fn being answered with backend info
+- Fix get_program_descriptions.fn returning the full program listing
+- Return a JSON object from fetch_all_device_data.fn, keyed "<interface>.<address>.<parameter>"
+- Return {"serial": "..."} from get_serial.fn instead of a bare string
+- Rename response keys to match the real scripts: is_ha_app, id/type, snake_case firmware keys, "file"
+- Report only "status" from create_backup_status.fn unless the backup completed
+- Add a get_alarm_messages.fn handler; it was misrouted to the sysvar listing
+- Fire a CENTRAL/PONG event from ping() so clients can match their own request
+- Keep a callback client registered when it answers with a fault; only transport errors unregister it
+- Continue event delivery to the remaining clients after one of them fails
+- Test the engine against the unmodified client scripts instead of hand-written fragments
+
 Version 0.2.5 (2026-06-23)
 - Update HmIP-FWI
 

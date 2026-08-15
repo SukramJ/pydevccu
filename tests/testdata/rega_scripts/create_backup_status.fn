@@ -1,0 +1,89 @@
+!# name: create_backup_status.fn
+!#
+!# This script checks the status of a backup started by create_backup_start.fn.
+!# Returns:
+!#   - "running": Backup process is still running
+!#   - "completed": Backup file exists and process has finished
+!#   - "failed": Process finished but no backup file exists
+!#   - "idle": No backup process started (no pid file)
+!#
+
+string sResult   = "";
+string sStatus   = "idle";
+string sPid      = "";
+string sSize     = "";
+string sHostname = "";
+string sVersion  = "";
+string sFilename = "";
+string sDate     = "";
+
+boolean bProcessRunning = false;
+boolean bFileExists = false;
+boolean bPidFileExists = false;
+boolean bBackupComplete = false;
+
+!# Check if pid file exists
+sResult = "";
+system.Exec("test -f /usr/local/tmp/backup.pid && echo 'YES' || echo 'NO'", &sResult);
+if (sResult.Trim() == "YES") {
+    bPidFileExists = true;
+
+    !# Read the PID
+    sResult = "";
+    system.Exec("cat /usr/local/tmp/backup.pid", &sResult);
+    sPid = sResult.Trim();
+
+    !# Check if process is still running
+    sResult = "";
+    system.Exec("/bin/sh -c 'ps -o pid | grep " # sPid # " > /dev/null 2>&1 && echo YES || echo NO'", &sResult);
+    if (sResult.Trim() == "YES") {
+        bProcessRunning = true;
+    }
+}
+
+!# Check if backup file exists
+sResult = "";
+system.Exec("test -f /usr/local/tmp/last_backup.sbk && echo 'YES' || echo 'NO'", &sResult);
+if (sResult.Trim() == "YES") {
+    bFileExists = true;
+}
+
+!# Determine status
+if (bProcessRunning) {
+    sStatus = "running";
+} else {
+    if (bFileExists) {
+        sStatus = "completed";
+        bBackupComplete = true;
+        !# Clean up pid file
+        system.Exec("rm -f /usr/local/tmp/backup.pid &");
+    } elseif (bPidFileExists) {
+              sStatus = "failed";
+              !# Clean up pid file
+              system.Exec("rm -f /usr/local/tmp/backup.pid &");
+    } else {
+        sStatus = "idle";
+    }
+}
+
+!# Build response
+if (bBackupComplete) {
+    !# Get file size
+    system.Exec("stat -c %s /usr/local/tmp/last_backup.sbk 2>/dev/null", &sSize);
+    sSize = sSize.Trim();
+
+    !# Get backup filename with timestamp
+    system.Exec("hostname", &sHostname);
+    sHostname = sHostname.Trim();
+
+    system.Exec("cat /VERSION | grep VERSION= | cut -d= -f2", &sVersion);
+    sVersion = sVersion.Trim();
+
+    sDate = localtime.Format("%F-%H%M");
+
+    sFilename = sHostname # "-" # sVersion # "-" # sDate # ".sbk";
+
+    Write('{"status":"' # sStatus # '","file":"/usr/local/tmp/last_backup.sbk","filename":"' # sFilename # '","size":' # sSize # '}');
+} else {
+    Write('{"status":"' # sStatus # '"}');
+}

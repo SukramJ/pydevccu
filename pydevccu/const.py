@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from enum import Enum, auto
 
-VERSION = "0.2.5"
+VERSION = "0.2.6"
 
 
 class BackendMode(Enum):
@@ -42,6 +42,12 @@ ATTR_PARENT_TYPE = "PARENT_TYPE"
 ATTR_FLAGS = "FLAGS"
 ATTR_ERROR = "ERROR"
 ATTR_PARENT = "PARENT"
+# ATTR_PONG is the parameter a CCU reports on the CENTRAL pseudo-address
+# to answer a ping; the value is the caller id the client passed in.
+ATTR_PONG = "PONG"
+# CENTRAL_ADDRESS is the pseudo-address for events that originate in the
+# central itself rather than in a device.
+CENTRAL_ADDRESS = "CENTRAL"
 ATTR_PARENT_TYPE = "PARENT_TYPE"
 
 PARAMSET_ATTR_MASTER = "MASTER"

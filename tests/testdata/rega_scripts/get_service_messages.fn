@@ -1,0 +1,144 @@
+!# name: get_service_messages.fn
+!#
+!# Return all active service messages from the CCU.
+!# Service messages include connectivity issues (UNREACH), configuration
+!# pending, low battery warnings, and other device alerts.
+!#
+!# Note: Inbox devices are handled separately by get_inbox_devices.fn.
+!#
+
+string sAlarmId;
+boolean bFirst = true;
+
+Write('[');
+
+object oServices = dom.GetObject(ID_SERVICES);
+if (oServices) {
+    foreach(sAlarmId, oServices.EnumIDs()) {
+        object oAlarm = dom.GetObject(sAlarmId);
+        if (oAlarm && (oAlarm.AlState() == 1)) {
+
+            string sRawName = oAlarm.Name();
+            string sName = "";
+            if (sRawName) {
+                sName = sRawName.UriEncode();
+            } else {
+                sRawName = "";
+            }
+
+            string sTimestamp = "";
+            time tTime = oAlarm.AlOccurrenceTime();
+            if (tTime) {
+                sTimestamp = tTime.ToString();
+            }
+
+            integer iType = oAlarm.AlType();
+            string sAddress = "";
+            string sDeviceName = "";
+
+            !# Last update timestamp (separate from AlOccurrenceTime which is first occurrence)
+            string sLastTimestamp = "";
+            time tLastTime = oAlarm.Timestamp();
+            if (tLastTime) {
+                sLastTimestamp = tLastTime.ToString();
+            }
+
+            !# Trigger count
+            integer iCounter = oAlarm.AlCounter();
+
+            !# Quittable flag — determined by the trigger datapoint's OPERATION_WRITE bit (2),
+            !# matching the CCU WebUI behavior (serviceMessages.htm checks oLastTrigger.Operations()).
+            boolean bQuittable = false;
+
+            !# Extract address from alarm name (format: "AL-ADDRESS:X.PARAM")
+            if (sRawName.Find("AL-") == 0) {
+                string sTmp = sRawName.Substr(3);
+                integer iColon = sTmp.Find(":");
+                if (iColon > 0) {
+                    sAddress = sTmp.Substr(0, iColon);
+                }
+            }
+
+            !# Get device name, rooms, and functions from trigger data point channel
+            !# Note: oTrigger.Channel() returns the channel ID (integer), not the object.
+            string sRooms = "";
+            string sFunctions = "";
+            integer iTriggerDP = oAlarm.AlTriggerDP();
+            if (iTriggerDP) {
+                object oTrigger = dom.GetObject(iTriggerDP);
+                if (oTrigger) {
+                    !# Check OPERATION_WRITE on the trigger datapoint (not the alarm object)
+                    integer iOps = oTrigger.Operations();
+                    if (iOps & 2) {
+                        bQuittable = true;
+                    }
+                    integer iChnId = oTrigger.Channel();
+                    if (iChnId) {
+                        object oChn = dom.GetObject(iChnId);
+                        if (oChn) {
+                            if (sAddress == "") {
+                                sAddress = oChn.Address();
+                            }
+                            sDeviceName = oChn.Name();
+                            if (sDeviceName) {
+                                sDeviceName = sDeviceName.UriEncode();
+                            } else {
+                                sDeviceName = "";
+                            }
+                            !# Rooms (collect all)
+                            boolean bFirstRoom = true;
+                            string sRoomId;
+                            foreach(sRoomId, oChn.ChnRoom()) {
+                                object oRoom = dom.GetObject(sRoomId);
+                                if (oRoom) {
+                                    if (bFirstRoom) {
+                                        bFirstRoom = false;
+                                    } else {
+                                        sRooms = sRooms # "\t";
+                                    }
+                                    sRooms = sRooms # oRoom.Name().UriEncode();
+                                }
+                            }
+                            !# Functions (collect all)
+                            boolean bFirstFunc = true;
+                            string sFuncId;
+                            foreach(sFuncId, oChn.ChnFunction()) {
+                                object oFunc = dom.GetObject(sFuncId);
+                                if (oFunc) {
+                                    if (bFirstFunc) {
+                                        bFirstFunc = false;
+                                    } else {
+                                        sFunctions = sFunctions # "\t";
+                                    }
+                                    sFunctions = sFunctions # oFunc.Name().UriEncode();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (true) {
+                if (bFirst) {
+                    bFirst = false;
+                } else {
+                    Write(',');
+                }
+
+                Write('{"id":"' # oAlarm.ID() # '",');
+                Write('"name":"' # sName # '",');
+                Write('"timestamp":"' # sTimestamp # '",');
+                Write('"type":' # iType # ',');
+                Write('"address":"' # sAddress # '",');
+                Write('"device_name":"' # sDeviceName # '",');
+                Write('"last_timestamp":"' # sLastTimestamp # '",');
+                Write('"counter":' # iCounter # ',');
+                Write('"rooms":"' # sRooms # '",');
+                Write('"functions":"' # sFunctions # '",');
+                Write('"quittable":' # bQuittable # '}');
+            }
+        }
+    }
+}
+
+Write(']');

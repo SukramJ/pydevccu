@@ -1,0 +1,104 @@
+!# name: fetch_all_device_data.fn
+!# param: "##interface##"
+!#
+!# This script fetches all device data required to initialize the entities without affecting the duty cycle.
+!#
+!# Original script: https://github.com/ioBroker/ioBroker.hm-rega/blob/master/regascripts/datapoints.fn
+!# datapoints.fn 1.9
+!# 3'2013-9'2014 hobbyquaker https://github.com/hobbyquaker
+!#
+!# Dieses Homematic-Script gibt eine Liste aller Datenpunkte, die zur Laufzeit einen validen Zeitstempel haben, als JSON String aus.
+!#
+!# modified by: SukramJ https://github.com/SukramJ && Baxxy13 https://github.com/Baxxy13
+!# v2.5 - 06/2026
+!#
+!# Das Interface wird durch die Integration an 'sUse_Interface' übergeben.
+!# Nutzbare Interfaces: BidCos-RF, BidCos-Wired, HmIP-RF, VirtualDevices, CUxD, CCU-Jack
+!# Zum Testen direkt auf der Homematic-Zentrale muss das Interface wie folgt eingetragen werden: sUse_Interface = "HmIP-RF";
+!#
+!# Params for session recorder
+!#
+
+string sUse_Interface = "##interface##";
+string sDevId; string sChnId; string sDPId; string sAllDevices; string sDP_Namestring;
+object oDevice; object oChannel; object oDP;
+integer iInterface_ID; integer iDP_Value_Type; integer iDP_Value_VarType;
+idarray iChnDPs_Array;
+var vDP_Value;
+boolean bDPFirst = true; boolean bDPisValid;
+object oInterface = interfaces.Get(sUse_Interface);
+
+Write('{');
+if (oInterface) {
+  iInterface_ID = interfaces.Get(sUse_Interface).ID();
+  sAllDevices = dom.GetObject(ID_DEVICES).EnumUsedIDs();
+  foreach (sDevId, sAllDevices) {
+    oDevice = dom.GetObject(sDevId);
+    if ((oDevice) && (oDevice.ReadyConfig()) && (oDevice.Interface() == iInterface_ID)) {
+      foreach (sChnId, oDevice.Channels()) {
+        oChannel = dom.GetObject(sChnId);
+        if (oChannel) {
+          iChnDPs_Array = oChannel.DPs();
+          if (iChnDPs_Array) {
+            foreach(sDPId, iChnDPs_Array) {
+              oDP = dom.GetObject(sDPId);
+              bDPisValid = false;
+              if (oDP && oDP.Timestamp()) {
+                !# DP muss validen Timestamp() haben
+                bDPisValid = true;
+                if ((!oDP.LastTimestamp()) && (sUse_Interface == "VirtualDevices")) {
+                  !# Sonderbehandlung VirtualDevices, DP muss validen LastTimestamp() haben
+                  bDPisValid = false;
+                }
+              }
+              if (bDPisValid) {
+                if (oDP.TypeName() != "VARDP") {
+                  !# keine Systemvariablen
+                  iDP_Value_Type = oDP.ValueType();
+                  vDP_Value = "";
+                  sDP_Namestring = oDP.Name().UriEncode();
+                  if (iDP_Value_Type == 20) {
+                    !# String-Datenpunkte
+                    vDP_Value = '"'# oDP.Value().UriEncode() #'"';
+                  }
+                  else {
+                    !# alle Datenpunkte außer String
+                    iDP_Value_VarType = 20;
+                    vDP_Value = oDP.Value();
+                    iDP_Value_VarType = vDP_Value.VarType();
+                    if (iDP_Value_Type == 2) {
+                      !# Boolean-Datenpunkte
+                      if (vDP_Value) {
+                        vDP_Value = "true";
+                      }
+                      else {
+                        vDP_Value = "false";
+                      }
+                    }
+                    if ((iDP_Value_VarType == 4) && (vDP_Value == "")) {
+                      !# Sonderpruefung auf String Scriptvariable und Leerstring
+                      vDP_Value = 0;
+                    }
+                  }
+                  if (bDPFirst) {
+                    bDPFirst = false;
+                  }
+                  else {
+                    WriteLine(',');
+                  }
+                  !# altes Verhalten: setze 0.00000 auf 0
+                  if (vDP_Value == "") { vDP_Value = 0; }
+                  Write('"');
+                  Write(sDP_Namestring);
+                  Write('":');
+                  Write(vDP_Value);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+Write('}');
