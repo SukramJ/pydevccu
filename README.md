@@ -482,4 +482,4 @@ Contributions are welcome, including AI-assisted ones — see the [AI Contributi
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE).
