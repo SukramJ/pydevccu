@@ -1,5 +1,12 @@
 # pydevccu
 
+> **Archived — this project is no longer maintained.** Its successor is
+> [godevccu](https://github.com/SukramJ/godevccu), a single-binary Go
+> simulator that started as a port of pydevccu and now maintains the device
+> catalogue itself. aiohomematic (2026.10.1 and later) and openccu-loom develop
+> and test against godevccu. The PyPI package stays available; there will be no
+> further releases.
+
 Virtual HomeMatic CCU XML-RPC and JSON-RPC Server with fake devices for development and testing.
 
 ## Features
